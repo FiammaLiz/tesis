@@ -1,4 +1,4 @@
-function rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, pause, sample_rate,... 
+function rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,... 
 ntrials, spike_stim, desired_channel_neural, thr,... 
 binsize, ave, fecha, file, profundidad)
 %Devuelve tantas figuras como tipos de estimulos haya: sonograma, audio, 
@@ -22,7 +22,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         line([0 0],ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
         line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
         hold off
-        xlim([-pause/5 pause*4/5]); %pongo de límite a la ventana seleccionada
+        xlim([-L duracion_stim(n)+L]); %pongo de límite a la ventana seleccionada
         title 'Estimulo, Raster e Histograma';
         ylabel 'Estimulo'
         
@@ -39,7 +39,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         imagesc('XData',t,'YData',f,'CData',10*log10(p(1:100,:)));
         colormap(jet);
         ylim([0 10000]);
-        xlim([-pause/5 pause*4/5]); %límite de ventana en x
+        xlim([-L duracion_stim(n)+L]); %límite de ventana en x
         hold on
         line([0 0],ax(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
         line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
@@ -54,7 +54,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
             line([0 0],ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
             line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
             hold off
-            xlim([-pause/5 pause*4/5]); %pongo de límite en x a la ventana seleccionada
+            xlim([-L duracion_stim(n)+L]);; %pongo de límite en x a la ventana seleccionada
             ylim([0 ntrials(n)+2]) %pongo de límite en y dos filas más que el numero de trials porque arranca en 1
             ylabel 'Raster';
         end 
@@ -67,9 +67,9 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
          histogram(hist_spikes,'BinWidth',binsize) %hago histograma
          hold on
          line([0 0],ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
-         line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
+         line((duracion_stim(n)*[1 1])',ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
          hold off
-         xlim([-pause/5 pause*4/5]); %Pongo de límite a la ventana seleccionada
+         xlim([-L duracion_stim(n)+L]); %Pongo de límite a la ventana seleccionada
         
         ylabel 'Histograma'
         xlabel 'tiempo/[s]';

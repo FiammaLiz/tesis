@@ -1,4 +1,4 @@
-function spikedetection (thr, channel_neural_data, sample_rate, num_stim, t0s, pause)
+function spikedetection (thr, channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim, pause)
 %Detección de spikes
 %Filtra por el umbral seleccionado la raw data y luego los guarda en un
 %struct según el tipo de estímulo y trial al que pertenezcan
@@ -42,13 +42,23 @@ ntrials(n)= sum(num_stim==n);
 end
 move_to_base_workspace(ntrials);
 
+%Calcula ventana de tiempo hacia atrás y hacia adelante del estímulo
+for n=1:length(unique(num_stim))
+    duracion_stim(n)= length(t_audio_stim{n})/sample_rate; %calcula la duración de cada estímulo en segundos
+    L1(n)= (pause-duracion_stim(n))/2; %calcula las ventanas posibles (la mitad de la distancia entre pausa y comienzo del estimulo)
+end 
+    L=min(L1); %escojo la ventana más chiquita 
+    
+move_to_base_workspace(duracion_stim);
+move_to_base_workspace(L);
+
 % Separa los spikes por tipo de estímulo y por trial, guarda
 %todo en un struct de celdas si es más de un estímulo, sino lo hace
 %para uno solo en una variable
 
  for m=1:(length(unique(num_stim)))  %para cada tipo de estímulo
     for l=1:ntrials(m) %y para todos los trials adentro
-    found_trial{l,1}= (spike_times(spike_times<=(s(m).t0s(l)+4*pause/5)))> (s(m).t0s(l)-pause/5); %selecciono spikes entre estímulo dentro de mi ventana, retorna valores booleanos
+    found_trial{l,1}= (spike_times(spike_times<=(s(m).t0s(l)+(duracion_stim(m)+L))))> (s(m).t0s(l)-L); %selecciono spikes entre estímulo dentro de mi ventana, retorna valores booleanos
     tstim{l,1} = spike_times(found_trial{l,1})-s(m).t0s(l);%paso a tiempo y lo relativizo a su t0 para alinear, me da tiempo en segundos donde dispara cada spike alineados
     end
  spike_stim(m).stim= {tstim{1:ntrials(m),1}}; %voy guardando las celdas en el struct

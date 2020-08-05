@@ -7,9 +7,9 @@
 
 path_file= '/home/alex/Documents/Fiamma/Datos_Canarios_Playback/ca313-VioAzu_2018-2019/190307/';
 cd (path_file); 
-protocolo='protocolo1_VioAzu_190307_113706.mat'; 
+protocolo='protocolo3_VioAzu_190307_120148.mat'; 
 load(protocolo); %cargo datos del .mat
-path_function ='/home/alex/Documents/Fiamma/Scripts/Intentos de Fiamma :P';
+path_function ='/home/alex/Documents/Fiamma/Scripts/Scripts_Fiamma';
 cd (path_function);
 
 
@@ -58,9 +58,9 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
   %thr= std_min*std_noise_detect; %calcula thr como x desvíos estandar de la mediana
   
   %Criterio 2: Asigno manualmente el umbral
-  thr=-200; 
+  thr=-100; 
   
-spikedetection (thr,channel_neural_data, sample_rate, num_stim, t0s, pause);
+spikedetection (thr,channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim,pause);
 
 %% Chequeo de la detección de spikes
 %Devuelve una figura con el canal neuronal seleccionado (raw data) donde marco umbral y eventos
@@ -76,7 +76,7 @@ ave, fecha, file, thr, profundidad,name_stim, desired_channel_neural)   %datos d
 
 binsize=0.010; %tamaño del bin del histograma, en segundos
 
-rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, pause, sample_rate,... %datos del estímulo
+rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,...  %datos del estímulo
 ntrials, spike_stim, desired_channel_neural, thr,... 
 binsize, ave, fecha, file, profundidad) %datos de la tabla
 

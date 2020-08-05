@@ -87,7 +87,7 @@ clear amplifier_data
 cd (path)
 save ([file '_raw.mat'],'-v7.3')
 
-path_function ='/home/alex/Documents/Fiamma/Scripts/Intentos de Fiamma :P';
+path_function ='/home/alex/Documents/Fiamma/Scripts/Scripts_Fiamma';
 cd (path_function);
 
 %% Filtrado de seniales

@@ -15,7 +15,7 @@ function spikedetection (thr, channel_neural_data, sample_rate, num_stim, t0s, t
  else
     [~,spike_lcs]=findpeaks(channel_neural_data','MinPeakHeight',thr); %Si es positivo, los máximos
  end 
-
+move_to_base_workspace(spike_lcs);
 spike_times = spike_lcs/sample_rate; %Lo paso a tiempo en segundos, porque spike_lcs es en samples
 move_to_base_workspace(spike_times);
 spike_tot=length(spike_times); %Este es el número de spikes que encontró
@@ -60,10 +60,13 @@ move_to_base_workspace(L);
     for l=1:ntrials(m) %y para todos los trials adentro
     found_trial{l,1}= (spike_times(spike_times<=(s(m).t0s(l)+(duracion_stim(m)+L))))> (s(m).t0s(l)-L); %selecciono spikes entre estímulo dentro de mi ventana, retorna valores booleanos
     tstim{l,1} = spike_times(found_trial{l,1})-s(m).t0s(l);%paso a tiempo y lo relativizo a su t0 para alinear, me da tiempo en segundos donde dispara cada spike alineados
+    lcstim{l,1}=spike_lcs(found_trial{l,1})'; %indice de spikes encontrados
     end
- spike_stim(m).stim= {tstim{1:ntrials(m),1}}; %voy guardando las celdas en el struct
+ spike_stim(m).trial= {tstim{1:ntrials(m),1}}; %voy guardando las celdas en el struct (instancia de spikes en segundos alineados)
+ spike_lcs_ss{m}=cell2mat(lcstim)'; %agrupo en celdas todos los indices de spikes por estimulo (para spike shape)
  end
  move_to_base_workspace(spike_stim);
+ move_to_base_workspace(spike_lcs_ss);
  
 return
 

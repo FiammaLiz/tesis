@@ -7,7 +7,9 @@
 
 path_file= '/home/alex/Documents/Fiamma/Datos_Canarios_Playback/ca313-VioAzu_2018-2019/190307/';
 cd (path_file); 
-protocolo='protocolo3_VioAzu_190307_120148.mat'; 
+protocolo='protocolo2_VioAzu_190307_114152.mat'; 
+%protocolo3_VioAzu_190307_120148
+%protocolo2_VioAzu_190307_114152
 load(protocolo); %cargo datos del .mat
 path_function ='/home/alex/Documents/Fiamma/Scripts/Scripts_Fiamma';
 cd (path_function);
@@ -58,7 +60,7 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
   %thr= std_min*std_noise_detect; %calcula thr como x desvíos estandar de la mediana
   
   %Criterio 2: Asigno manualmente el umbral
-  thr=-100; 
+  thr=-450; 
   
 spikedetection (thr,channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim,pause);
 
@@ -69,6 +71,25 @@ spikedetection (thr,channel_neural_data, sample_rate, num_stim, t0s, t_audio_sti
 spikecheck (t_board_adc, t_amplifier,t0s, num_t0s, sample_rate, ... %tiempos
 filtered_audio_data, channel_neural_data, spike_times, spike_tot,... %audio, canal neuronal, spikes
 ave, fecha, file, thr, profundidad,name_stim, desired_channel_neural)   %datos de la tabla
+
+%% Spike shape
+
+w_pre=0.001;
+w_post=0.0015;
+desired_channels_neural= 16:19;
+canales= '16 a 19';
+%Para poder llamar solo los 4 canales que quiero arriba
+for ch = 1:numch
+    channels_neural(ch)=find(chip_channels==desired_channels_neural(ch));
+end
+
+%Extract data from desired channel
+channel_neural_data=filtered_neural_data(:,channels_neural);
+numch=length(desired_channels_neural);
+
+spikeshape(w_pre,w_post,desired_channels_neural,canales,channel_neural_data,...
+    numch, spike_lcs_ss,sample_rate, num_stim, ntrials, ave, fecha, file, name_stim, profundidad, thr)
+
 
 %% Ploteo de raster
 %Devuelve tantas figuras como tipos de estimulos haya: sonograma, audio, 

@@ -49,7 +49,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         ax(3)=subplot(5,1,3);
         %Raster
         for i= 1:(ntrials(n)) %para todos los trials en el estimulo n
-            line((spike_stim(n).stim{1,i}'*[1 1])',[0 1] + i,'LineStyle','-','MarkerSize',4,'Color','r'); %extrae las instancias de disparo y hace lineas rojas, apilándolas por cada trial
+            line((spike_stim(n).trial{1,i}'*[1 1])',[0 1] + i,'LineStyle','-','MarkerSize',4,'Color','r'); %extrae las instancias de disparo y hace lineas rojas, apilándolas por cada trial
             hold on
             line([0 0],ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
             line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
@@ -63,7 +63,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         
         %Histograma
 
-         hist_spikes=cell2mat(spike_stim(n).stim); %agrupo las instancias spikes del mismo estímulo en un solo vector para función histograma
+         hist_spikes=cell2mat(spike_stim(n).trial); %agrupo las instancias spikes del mismo estímulo en un solo vector para función histograma
          histogram(hist_spikes,'BinWidth',binsize) %hago histograma
          hold on
          line([0 0],ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
@@ -82,7 +82,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         move_to_base_workspace(estimulo);
         
         for i= 1:(ntrials(n)) %para todos los trials del estimulo
-        spikenumtrial(i)=numel(spike_stim(n).stim{i}); %cuenta el número de spikes 
+        spikenumtrial(i)=numel(spike_stim(n).trial{i}); %cuenta el número de spikes 
         move_to_base_workspace=(spikenumtrial);
         numspikes= sum(spikenumtrial(1:i)); %y los suma para tener #spikes/trial
         end

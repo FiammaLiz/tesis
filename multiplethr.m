@@ -1,3 +1,11 @@
+%% MULTIPLETHR
+%Para hacer n cantidad de histogramas con n cantidad de umbrales en un
+%canal
+%Fiamma Liz Leites
+%Script para Matlab 2017a
+%Version 07/08/2020
+
+%% Selecciono canal y umbrales
 
 %Si extraje un grupo de canales
 desired_channel_neural= 19; %este es el canal que quiero
@@ -12,12 +20,17 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 
 thr_m= (100:20:200); %umbrales que quiero abarcar
 
+%% Detecto los spikes
+
+
 for i=1:length(thr_m) %para todos los umbrales
     spikedetection (thr_m(i), channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim, pause) %levanto los spikes
     for a=1:length(unique(num_stim))
     thrspike(a).stim(i).thr=spike_stim(a).trial{1,ntrials(a)}; %los guardo en un struct por estimulo y umbral
     end
 end 
+
+%% Ploteo
 
 for n=1:length(unique(num_stim)) %para cada estimulo
     f1= figure(n); %hace una figura
@@ -82,7 +95,3 @@ end
         linkaxes(h,'x');
         
 end 
-
-%hist_spikes=cell2mat(thrspike(n).thr(a).stim);
-
-%X = [MPG,Weight]; hist3(X,'CdataMode','auto') xlabel('MPG') ylabel('Weight') colorbar view(2)

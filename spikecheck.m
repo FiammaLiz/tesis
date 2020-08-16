@@ -1,6 +1,6 @@
 function spikecheck (t_board_adc, t_amplifier,t0s, num_t0s, sample_rate, ... 
 filtered_audio_data, channel_neural_data, spike_times, spike_tot,... 
-ave, fecha, file, thr, profundidad, name_stim, desired_channel_neural) 
+ave, fecha, file, thr,std_min, profundidad, name_stim, desired_channel_neural) 
 %Check spike detection
 %Devuelve una figura con el canal neuronal seleccionado (raw data) donde marco umbral y eventos
 %de spike
@@ -34,8 +34,8 @@ linkaxes(h,'x'); %alinea los ceros
 equispace(f1); %pega los ejes
 
 %Tabla con datos 
-colnames_sd={'Ave', 'Fecha', 'Protocolo', 'Profundidad', 'Canal', 'Umbral' 'Spikes'};
-valuetable_sd={ave, fecha, file,  profundidad, desired_channel_neural,thr, spike_tot};       
-uitable(f1,'Data', valuetable_sd, 'RowName', [], 'ColumnName', colnames_sd,'Position', [320 100 700 40.5]);
+colnames_sd={'Ave', 'Fecha', 'Protocolo', 'Profundidad', 'Canal', 'Umbral','Desvío', 'Spikes'};
+valuetable_sd={ave, fecha, file,  profundidad, desired_channel_neural,thr,std_min, spike_tot};       
+uitable(f1,'Data', valuetable_sd, 'RowName', [], 'ColumnName', colnames_sd,'Position', [320 100 750 40.5]);
 
 end 

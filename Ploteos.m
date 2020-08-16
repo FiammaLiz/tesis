@@ -54,15 +54,18 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 
 %Umbral de detección
  %Criterio 1: Cálculo de umbral con desvío estándar
-  % std_min=7; %Desvío estándar
+  %std_min=18.4304; %Desvío estándar
   %abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
   %std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvío estandar de mediana de los datos
   %thr= std_min*std_noise_detect; %calcula thr como x desvíos estandar de la mediana
   
   %Criterio 2: Asigno manualmente el umbral
-  thr=-450; 
+  thr=-300; 
+  abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
+  std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvío estandar de mediana de los datos
+  std_min=abs(thr/std_noise_detect); %Calculo cuántos desvíos estandard representa mi umbral escogido para posterior comparación
   
-spikedetection (thr,channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim,pause);
+spikedetection (thr,channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim,pausa);
 
 %% Chequeo de la detección de spikes
 %Devuelve una figura con el canal neuronal seleccionado (raw data) donde marco umbral y eventos
@@ -70,7 +73,7 @@ spikedetection (thr,channel_neural_data, sample_rate, num_stim, t0s, t_audio_sti
 
 spikecheck (t_board_adc, t_amplifier,t0s, num_t0s, sample_rate, ... %tiempos
 filtered_audio_data, channel_neural_data, spike_times, spike_tot,... %audio, canal neuronal, spikes
-ave, fecha, file, thr, profundidad,name_stim, desired_channel_neural)   %datos de la tabla
+ave, fecha, file, thr,std_min, profundidad,name_stim, desired_channel_neural)   %datos de la tabla
 
 %% Spike shape
 
@@ -78,6 +81,7 @@ w_pre=0.001; %ventana anterior del pico del spike
 w_post=0.0015; %ventana posterior del pico del spike
 desired_channels_neural= 16:19; %canales que quiero
 canales= '16 a 19'; %para la tabla
+numch=length(desired_channels_neural);
 
 %Para poder llamar solo los 4 canales que quiero arriba
 for ch = 1:numch
@@ -90,7 +94,7 @@ numch=length(desired_channels_neural);
 
 %Ploteo los spikes shapes con la funcion
 spikeshape(w_pre,w_post,desired_channels_neural,canales,channel_neural_data,...
-    numch, spike_lcs_ss,sample_rate, num_stim, ntrials, ave, fecha, file, name_stim, profundidad, thr)
+    numch, spike_lcs_ss,sample_rate, num_stim, ntrials, ave, fecha, file, name_stim, profundidad, thr, std_min)
 
 %% Ploteo de raster+histograma
 %Devuelve tantas figuras como tipos de estimulos haya: sonograma, audio, 
@@ -99,5 +103,5 @@ spikeshape(w_pre,w_post,desired_channels_neural,canales,channel_neural_data,...
 binsize=0.010; %tamaño del bin del histograma, en segundos
 
 rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,...  %datos del estímulo
-ntrials, spike_stim, desired_channel_neural, thr,... 
+ntrials, spike_stim, desired_channel_neural,thr,std_min,... 
 binsize, ave, fecha, file, profundidad) %datos de la tabla

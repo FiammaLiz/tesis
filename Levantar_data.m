@@ -21,7 +21,7 @@ desired_channels_neural=8:23; %Cuál es el canal neuronal que quiero
 desired_sound_channel= 2; %Canal del sonido
 desired_witness_channel= 1; %Canal de la senial testigo
 numch=length(desired_channels_neural); %cuántos canales son
-pause=30; %pausa en segundos que aparece en el log
+pausa=30; %pausa en segundos que aparece en el log
 profundidad= 180;
 
 %Cargo archivos de audio

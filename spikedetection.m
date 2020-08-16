@@ -1,4 +1,4 @@
-function spikedetection (thr, channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim, pause)
+function spikedetection (thr, channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim, pausa)
 %Detección de spikes
 %Filtra por el umbral seleccionado la raw data y luego los guarda en un
 %struct según el tipo de estímulo y trial al que pertenezcan
@@ -45,7 +45,7 @@ move_to_base_workspace(ntrials);
 %Calcula ventana de tiempo hacia atrás y hacia adelante del estímulo
 for n=1:length(unique(num_stim))
     duracion_stim(n)= length(t_audio_stim{n})/sample_rate; %calcula la duración de cada estímulo en segundos
-    L1(n)= (pause-duracion_stim(n))/2; %calcula las ventanas posibles (la mitad de la distancia entre pausa y comienzo del estimulo)
+    L1(n)= (pausa-duracion_stim(n))/2; %calcula las ventanas posibles (la mitad de la distancia entre pausa y comienzo del estimulo)
 end 
     L=min(L1); %escojo la ventana más chiquita 
     

@@ -1,4 +1,4 @@
-function spikeshape(w_pre,w_post,desired_channels_neural,canales,channel_neural_data,numch, spike_lcs_ss,sample_rate, num_stim, ntrials, ave, fecha, file, name_stim, profundidad, thr)
+function spikeshape(w_pre,w_post,desired_channels_neural,canales,channel_neural_data,numch, spike_lcs_ss,sample_rate, num_stim, ntrials, ave, fecha, file, name_stim, profundidad, thr, std_min)
  %Devuelve spike shapes de los canales seleccionados en diferentes
  %subplots, hace una figura por estimulo.
  %Version 06/08/2020
@@ -16,26 +16,34 @@ for k=1:length(unique(num_stim)) %para cada tipo de estimulo
 ss=figure(k); %armo tantas figuras como tipos de estimulos tenga
 t_ss= (1:length(spikeshapes(:,1)))/sample_rate; %tiempo que duran los spikes para poder plotear
 
-for ch=1:numch %para cada canal hago un subplot para apilarlos
-    sss=subplot(length(desired_channels_neural)+1,1,ch);
+    sss(1)=subplot(3,1,1);
+for ch=1:numch %para cada canal
 for m=1:length(spike_lcs_ss{k}) %ploteo cada spike apilandolos en un plot por canal 
-    plot (t_ss,spikeshapes(:,m),'color',[0.4940 0.1840 0.5560 0.5]); %color violeta con cierta transparencia, cuando se apilan se oscurece las partes donde coinciden
+    plot (t_ss+w_post*(ch-1),spikeshapes_ch(ch).ch(:,m),'color',[0.4940 0.1840 0.5560 0.3]); %color violeta con cierta transparencia, cuando se apilan se oscurece las partes donde coinciden
     hold on
    % pause %por si quiero ir viendo los spikes mientras apila
 end 
     %pause %por si quiero ver los spikes apilados antes de poner media +
     %desvio
-    plot (t_ss, mean(spikeshapes,2),'color',[0 0 0.8 0.5],'LineWidth',2); %ploteo la media superpuesta a los spikes
-    desv_std= std(spikeshapes'); %calculo el desvio estandard de la media
-    errorbar(t_ss,mean(spikeshapes,2),desv_std,'color',[0 0 0.8 0.5],'LineWidth',0.01); %ploteo barras de error
-    hold off
-    ylabel(desired_channels_neural(ch)) %nombra los ejes y con el numero de canal que le corresponde
-    xlabel 'tiempo/[s]'
-    
 end 
-linkaxes(sss,'x'); %alinea los ejes
-equispace(ss); %pega los ejes y
+    hold off 
+title 'Spike shapes de un tetrodo'
 
+for ch=1:numch %para cada canal hago un subplot
+    sss(2)=subplot(3,1,2);
+for m=1:length(spike_lcs_ss{k}) %ploteo cada spike apilandolos en un plot por canal 
+    plot (t_ss+w_post*(ch-1),spikeshapes_ch(ch).ch(:,m)), %multicolor si uso desvío estandard 
+    hold on
+end 
+    plot (t_ss+w_post*(ch-1), mean(spikeshapes_ch(ch).ch,2),'color',[0 0 0 0],'LineWidth',2); %ploteo la media superpuesta a los spikes
+    desv_std= std(spikeshapes'); %calculo el desvio estandard de la media
+    errorbar(t_ss+w_post*(ch-1),mean(spikeshapes_ch(ch).ch,2),desv_std,'color',[0 0 0 0],'LineWidth',0.01); %ploteo barras de error
+    xlabel (desired_channels_neural(ch));
+end
+    hold off
+    linkaxes(sss); %alinea los ejes
+    equispace(ss); %pega los ejes
+    
 %Tabla de datos
  estimulo=name_stim(num_stim==k); %nombre del estimulo
         estimulo=char(estimulo(1)); %para tenerlo una sola vez
@@ -46,9 +54,9 @@ equispace(ss); %pega los ejes y
         move_to_base_workspace(spikenumtrial);
         numspikes= sum(spikenumtrial(1:i)); %y los suma para tener #spikes/trial
         end
-colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Profundidad', 'Canales', 'Umbral', 'Spikes'};
-valuetable={ave, fecha, file, estimulo, profundidad, canales, thr, numspikes};       
-uitable(ss,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1000 40.5]);
+colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Profundidad', 'Canales', 'Umbral','Desvio', 'Spikes'};
+valuetable={ave, fecha, file, estimulo, profundidad, canales, thr,std_min, numspikes};       
+uitable(ss,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1050 40.5]);
 
 end 
 

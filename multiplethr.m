@@ -18,13 +18,14 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 %desired_channel_neural= 19; %este es el canal que quiero
 %channel_neural_data=filtered_neural_data';
 
-thr_m= (100:20:200); %umbrales que quiero abarcar
+thr_m= (-200:20:-100); %umbrales que quiero abarcar
+binsize= 0.008;
 
 %% Detecto los spikes
 
 
 for i=1:length(thr_m) %para todos los umbrales
-    spikedetection (thr_m(i), channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim, pause) %levanto los spikes
+    spikedetection (thr_m(i), channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim, pausa) %levanto los spikes
     for a=1:length(unique(num_stim))
     thrspike(a).stim(i).thr=spike_stim(a).trial{1,ntrials(a)}; %los guardo en un struct por estimulo y umbral
     end
@@ -71,8 +72,9 @@ for th = 1:length(thr_m) %para cada umbral
     hist_spike_thrm{th}= thrspike(n).stim(th); %junta los datos para hacer el histograma
     
      h(2+th)= subplot(3+length(thr_m),1,2+th);
-         histogram(hist_spike_thrm{1,th}.thr,'BinWidth',binsize) %hago histograma
+         histogram(hist_spike_thrm{1,th}.thr,'BinWidth',binsize,'Normalization','pdf'); %hago histograma
          hold on
+         ksdensity(hist_spike_thrm{1,th}.thr,'BandWidth',binsize,'NumPoints',100000, 'function', 'pdf');
          line([0 0],h(2+th).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
          line((duracion_stim(1)*[1 1])',h(2+th).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
          xlim([-L duracion_stim(1)+L]); %Pongo de límite a la ventana seleccionada
@@ -87,8 +89,8 @@ end
         numspikes= sum(spikenumtrial(1:i)); %y los suma para tener #spikes/trial
         end
         
-        colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Repeticiones','Profundidad', 'Canal', 'Umbrales','Binsize histograma'};
-        valuetable={ave, fecha, file, estimulo, ntrials(n), profundidad, desired_channel_neural, umbrales, binsize};       
+        colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Repeticiones','Profundidad', 'Canal', 'Binsize histograma'};
+        valuetable={ave, fecha, file, estimulo, ntrials(n), profundidad, desired_channel_neural, binsize};       
         t = uitable(f1,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1200 40.5]);
         
         equispace(f1)  

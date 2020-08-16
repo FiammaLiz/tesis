@@ -1,5 +1,5 @@
 function rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,... 
-ntrials, spike_stim, desired_channel_neural, thr,... 
+ntrials, spike_stim, desired_channel_neural, thr,std_min,... 
 binsize, ave, fecha, file, profundidad)
 %Devuelve tantas figuras como tipos de estimulos haya: sonograma, audio, 
 %raster e histograma
@@ -64,8 +64,10 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         %Histograma
 
          hist_spikes=cell2mat(spike_stim(n).trial); %agrupo las instancias spikes del mismo estímulo en un solo vector para función histograma
-         histogram(hist_spikes,'BinWidth',binsize) %hago histograma
+         histogram(hist_spikes,'BinWidth',binsize,'Normalization','pdf') %hago histograma
          hold on
+         %[f,xi]=ksdensity(hist_spikes,'BandWidth',binsize,'function','pdf');
+         %plot(xi,f);
          line([0 0],ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
          line((duracion_stim(n)*[1 1])',ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
          hold off
@@ -88,9 +90,9 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         end
         move_to_base_workspace=(numspikes);
         
-        colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Repeticiones','Profundidad', 'Canal', 'Umbral', 'Spikes','Binsize histograma'};
-        valuetable={ave, fecha, file, estimulo, ntrials(n), profundidad, desired_channel_neural, thr, numspikes, binsize};       
-        t = uitable(f2,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1200 40.5]);
+        colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Repeticiones','Profundidad', 'Canal', 'Umbral','Desvío','Spikes','Binsize histograma'};
+        valuetable={ave, fecha, file, estimulo, ntrials(n), profundidad, desired_channel_neural, thr, std_min, numspikes, binsize};       
+        t = uitable(f2,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1220 40.5]);
     
 end 
 return

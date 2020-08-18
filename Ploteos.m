@@ -20,8 +20,8 @@ cd (path_function);
 %estimulos y la senial de los cuatro canales del tetrodo con marcas de
 %inicio y fin de los estimulos.
 
-desired_channels_neural= 16:19;
-canales= '16 a 19';
+desired_channels_neural= 20:23;
+canales= '20 a 23';
 numch=length(desired_channels_neural);
 
 %Para poder llamar solo los 4 canales que quiero arriba
@@ -42,7 +42,7 @@ t0s, name_stim, y, sample_rate, desired_channels_neural) %datos de la tabla
 %struct según el tipo de estímulo y trial al que pertenezcan
 
 %Si extraje un grupo de canales
-desired_channel_neural= 19; %este es el canal que quiero
+desired_channel_neural= 22; %este es el canal que quiero
 channels_neural=find(chip_channels==desired_channel_neural); %para llamar al canal que quiero
 
 %Extract data from desired channel
@@ -54,13 +54,13 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 
 %Umbral de detección
  %Criterio 1: Cálculo de umbral con desvío estándar
-  %std_min=18.4304; %Desvío estándar
+  %std_min=-15; %Desvío estándar
   %abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
   %std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvío estandar de mediana de los datos
-  %thr= std_min*std_noise_detect; %calcula thr como x desvíos estandar de la mediana
+  %thr= -std_min*std_noise_detect; %calcula thr como x desvíos estandar de la mediana
   
   %Criterio 2: Asigno manualmente el umbral
-  thr=-250; 
+  thr=-400; 
   abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
   std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvío estandar de mediana de los datos
   std_min=thr/std_noise_detect %Calculo cuántos desvíos estandard representa mi umbral escogido para posterior comparación
@@ -79,8 +79,8 @@ ave, fecha, file, thr,std_min, profundidad,name_stim, desired_channel_neural)   
 
 w_pre=0.001; %ventana anterior del pico del spike
 w_post=0.0015; %ventana posterior del pico del spike
-desired_channels_neural= 16:19; %canales que quiero
-canales= '16 a 19'; %para la tabla
+desired_channels_neural= 20:23; %canales que quiero
+canales= '20 a 23'; %para la tabla
 numch=length(desired_channels_neural);
 
 %Para poder llamar solo los 4 canales que quiero arriba
@@ -94,14 +94,15 @@ numch=length(desired_channels_neural);
 
 %Ploteo los spikes shapes con la funcion
 spikeshape(w_pre,w_post,desired_channels_neural,desired_channel_neural,canales,channel_neural_data,...
-    numch, spike_lcs_ss,sample_rate, num_stim, ntrials, ave, fecha, file, name_stim, profundidad, thr, std_min)
+    numch, spike_lcs_ss,sample_rate, num_stim, ave, fecha, file, name_stim, profundidad, thr, std_min)
 
 %% Ploteo de raster+histograma
 %Devuelve tantas figuras como tipos de estimulos haya: sonograma, audio, 
 %raster e histograma
 
 binsize=0.010; %tamaño del bin del histograma, en segundos
+points_bins= 1000; %puntos por bin para suavizado
 
 rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,...  %datos del estímulo
-ntrials, spike_stim, desired_channel_neural,thr,std_min,... 
+ntrials, spike_stim, desired_channel_neural,thr,std_min,points_bins,... 
 binsize, ave, fecha, file, profundidad) %datos de la tabla

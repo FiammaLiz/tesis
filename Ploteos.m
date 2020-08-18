@@ -42,7 +42,7 @@ t0s, name_stim, y, sample_rate) %datos de la tabla
 %struct según el tipo de estímulo y trial al que pertenezcan
 
 %Si extraje un grupo de canales
-desired_channel_neural= 19; %este es el canal que quiero
+desired_channel_neural= 17; %este es el canal que quiero
 channels_neural=find(chip_channels==desired_channel_neural); %para llamar al canal que quiero
 
 %Extract data from desired channel
@@ -60,7 +60,7 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
   %thr= std_min*std_noise_detect; %calcula thr como x desvíos estandar de la mediana
   
   %Criterio 2: Asigno manualmente el umbral
-  thr=-250; 
+  thr=-400; 
   abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
   std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvío estandar de mediana de los datos
   std_min=thr/std_noise_detect %Calculo cuántos desvíos estandard representa mi umbral escogido para posterior comparación
@@ -93,7 +93,7 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 numch=length(desired_channels_neural);
 
 %Ploteo los spikes shapes con la funcion
-spikeshape(w_pre,w_post,desired_channels_neural,canales,channel_neural_data,...
+spikeshape(w_pre,w_post,desired_channels_neural,desired_channel_neural,canales,channel_neural_data,...
     numch, spike_lcs_ss,sample_rate, num_stim, ntrials, ave, fecha, file, name_stim, profundidad, thr, std_min)
 
 %% Ploteo de raster+histograma

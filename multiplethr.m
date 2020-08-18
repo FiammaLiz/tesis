@@ -18,8 +18,8 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 %desired_channel_neural= 19; %este es el canal que quiero
 %channel_neural_data=filtered_neural_data';
 
-thr_m= (-200:20:-100); %umbrales que quiero abarcar
-binsize= 0.008;
+thr_m= (-300:50:-100); %umbrales que quiero abarcar
+binsize= 0.01;
 
 %% Detecto los spikes
 
@@ -27,8 +27,10 @@ binsize= 0.008;
 for i=1:length(thr_m) %para todos los umbrales
     spikedetection (thr_m(i), channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim, pausa) %levanto los spikes
     for a=1:length(unique(num_stim))
-    thrspike(a).stim(i).thr=spike_stim(a).trial{1,ntrials(a)}; %los guardo en un struct por estimulo y umbral
-    end
+        for k=1:ntrials(a)
+    thrspike(a).stim(i).thr{k}=spike_stim(a).trial{1,k}; %los guardo en un struct por estimulo y umbral
+        end 
+        end
 end 
 
 %% Ploteo
@@ -72,9 +74,9 @@ for th = 1:length(thr_m) %para cada umbral
     hist_spike_thrm{th}= thrspike(n).stim(th); %junta los datos para hacer el histograma
     
      h(2+th)= subplot(3+length(thr_m),1,2+th);
-         histogram(hist_spike_thrm{1,th}.thr,'BinWidth',binsize,'Normalization','pdf'); %hago histograma
+         histogram(cell2mat(hist_spike_thrm{1,th}.thr),'BinWidth',binsize,'Normalization','probability'); %hago histograma, convirtiendo mis datos en un solo vector para que histogram lo tome
          hold on
-         ksdensity(hist_spike_thrm{1,th}.thr,'BandWidth',binsize,'NumPoints',100000, 'function', 'pdf');
+         %ksdensity(hist_spike_thrm{1,th}.thr,'BandWidth',binsize,'NumPoints',100000, 'function', 'pdf');
          line([0 0],h(2+th).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
          line((duracion_stim(1)*[1 1])',h(2+th).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
          xlim([-L duracion_stim(1)+L]); %Pongo de límite a la ventana seleccionada
@@ -83,11 +85,6 @@ end
         %Tabla con datos
         estimulo=name_stim(num_stim==n); %nombre del estimulo
         estimulo=char(estimulo(1)); %para tenerlo una sola vez
-        
-        for i= 1:(ntrials(n)) %para todos los trials del estimulo
-        spikenumtrial(i)=numel(spike_stim(n).trial{i}); %cuenta el número de spikes 
-        numspikes= sum(spikenumtrial(1:i)); %y los suma para tener #spikes/trial
-        end
         
         colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Repeticiones','Profundidad', 'Canal', 'Binsize histograma'};
         valuetable={ave, fecha, file, estimulo, ntrials(n), profundidad, desired_channel_neural, binsize};       

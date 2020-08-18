@@ -18,7 +18,7 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 %desired_channel_neural= 19; %este es el canal que quiero
 %channel_neural_data=filtered_neural_data';
 
-thr_m= (-300:50:-100); %umbrales que quiero abarcar
+thr_m= (-350:50:-100); %umbrales que quiero abarcar
 binsize= 0.01;
 
 %% Detecto los spikes
@@ -89,7 +89,7 @@ end
         
         colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Repeticiones','Profundidad', 'Canal', 'Binsize histograma'};
         valuetable={ave, fecha, file, estimulo, ntrials(n), profundidad, desired_channel_neural, binsize};       
-        t = uitable(f1,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1200 40.5]);
+        t = uitable(f1,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [125 30 1100 40.5]);
         
         equispace(f1)  
         linkaxes(h,'x');

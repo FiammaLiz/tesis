@@ -1,4 +1,4 @@
-function plotrawdata (ave, fecha, file, profundidad, canales, numch,t_amplifier, t_board_adc,channel_neural_data, filtered_audio_data, filtered_stimuli_data, t0s, name_stim, y, sample_rate)
+function plotrawdata (ave, fecha, file, profundidad, canales, numch,t_amplifier, t_board_adc,channel_neural_data, filtered_audio_data, filtered_stimuli_data, t0s, name_stim, y, sample_rate, desired_channels_neural)
 %Grafica los datos levantados con Levantar_data
 %Devuelve graficados la senial testigo, el espectograma estiquetado con los
 %estimulos y la senial de los cuatro canales del tetrodo con marcas de
@@ -21,7 +21,7 @@ num_fig=3+numch; %número de subplots de acuerdo a la cantidad de canales que in
 %Canal testigo
  h(1)= subplot(num_fig,1,1);
  plot(t_board_adc,filtered_stimuli_data); 
- ylabel 'Canal testigo'
+ ylabel ('Canal testigo','FontSize',9)
  line((t0s'*[1 1])',h(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.3 0.3 0 0.6]); 
  title 'Raw data: canal testigo, espectograma y canales neuronales';
 
@@ -32,7 +32,7 @@ num_fig=3+numch; %número de subplots de acuerdo a la cantidad de canales que in
     ylim([0 10000]);
     text(t0s,y,name_stim,'FontSize',10,'Interpreter','none'); %etiqueta qué estimulo es al principio del estímulo
     line((t0s'*[1 1])',h(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.3 0.3 0 0.6]); 
-    ylabel 'frecuencia/[Hz]';
+    ylabel ('frecuencia/[Hz]','FontSize',9);
 %     title 'Espectrograma';
  
  %Canales de la señal neuronal
@@ -41,6 +41,7 @@ lim_ejey=[-500 500];
      h(2+ch)= subplot(num_fig,1,2+ch);
      plot(t_amplifier,channel_neural_data(:,ch));
      ylim(lim_ejey);
+     ylabel ({['Ch' num2str(desired_channels_neural(ch))],'Voltaje/[mV]'}, 'FontSize',9);
 %     title 'Raw data neuronas';
     hold on
     
@@ -56,7 +57,6 @@ lim_ejey=[-500 500];
 
     hold off
  end
-      ylabel 'Voltaje/[mV]';
       xlabel 'tiempo/[s]';
       
    equispace(r1);

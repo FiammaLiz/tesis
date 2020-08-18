@@ -64,7 +64,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         %Histograma
 
          hist_spikes=cell2mat(spike_stim(n).trial); %agrupo las instancias spikes del mismo estímulo en un solo vector para función histograma
-         histogram(hist_spikes,'BinWidth',binsize,'Normalization','pdf') %hago histograma
+         histogram(hist_spikes,'BinWidth',binsize,'Normalization','probability') %hago histograma
          hold on
          %[f,xi]=ksdensity(hist_spikes,'BandWidth',binsize,'function','pdf');
          %plot(xi,f);

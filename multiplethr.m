@@ -56,7 +56,7 @@ for n=1:length(unique(num_stim)) %para cada estimulo
         line([0 0],h(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
         line((t_audio_stim{1}(length(t_audio_stim{1}))*[1 1])',h(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
         hold off
-        ylabel 'Espectograma';
+        ylabel ('Espectograma', 'FontSize', 10);
         title 'Barrido con distintos umbrales'
         
      h(2)=subplot(3+length(thr_m),1,2);
@@ -67,7 +67,7 @@ for n=1:length(unique(num_stim)) %para cada estimulo
         line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',h(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
         hold off
         xlim([-L duracion_stim(n)+L]); %pongo de límite a la ventana seleccionada
-        ylabel 'Estimulo'
+        ylabel ('Estimulo', 'FontSize', 10);
         
 
 for th = 1:length(thr_m) %para cada umbral
@@ -80,8 +80,9 @@ for th = 1:length(thr_m) %para cada umbral
          line([0 0],h(2+th).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
          line((duracion_stim(1)*[1 1])',h(2+th).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
          xlim([-L duracion_stim(1)+L]); %Pongo de límite a la ventana seleccionada
-         ylabel(thr_m(th))
+         ylabel(['Thr=' num2str(thr_m(th))], 'FontSize', 10); %Nombro el umbral usado en el eje y
 end 
+        xlabel ('tiempo/[s]');
         %Tabla con datos
         estimulo=name_stim(num_stim==n); %nombre del estimulo
         estimulo=char(estimulo(1)); %para tenerlo una sola vez

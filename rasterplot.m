@@ -1,5 +1,5 @@
 function rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,... 
-ntrials, spike_stim, desired_channel_neural, thr,std_min,... 
+ntrials, spike_stim, desired_channel_neural, thr,std_min,points_bins,... 
 binsize, ave, fecha, file, profundidad)
 %Devuelve tantas figuras como tipos de estimulos haya: sonograma, audio, 
 %raster e histograma
@@ -54,7 +54,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
             line([0 0],ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
             line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
             hold off
-            xlim([-L duracion_stim(n)+L]);; %pongo de límite en x a la ventana seleccionada
+            xlim([-L duracion_stim(n)+L]); %pongo de límite en x a la ventana seleccionada
             ylim([0 ntrials(n)+2]) %pongo de límite en y dos filas más que el numero de trials porque arranca en 1
             ylabel 'Raster';
         end 
@@ -62,12 +62,17 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         ax(4)=subplot(5,1,4);
         
         %Histograma
-
+        % num_points=pausa/binsize*1000 %otro modo de puntos para suavizado
          hist_spikes=cell2mat(spike_stim(n).trial); %agrupo las instancias spikes del mismo estímulo en un solo vector para función histograma
-         histogram(hist_spikes,'BinWidth',binsize,'Normalization','probability') %hago histograma
+         counts=histogram(hist_spikes,'BinWidth',binsize,'Normalization','pdf'); %hago histograma con tipo de normalizacion pdf
+         num_points=counts.NumBins*points_bins;
+         %counts=histogram(hist_spikes,'BinWidth',binsize,'Normalization','probability');
+         %hago histograma % otra normalizacion
          hold on
-         %[f,xi]=ksdensity(hist_spikes,'BandWidth',binsize,'function','pdf');
-         %plot(xi,f);
+%        yyaxis left
+         [f,xi]=ksdensity(hist_spikes,'BandWidth',binsize,'function','pdf','NumPoints',num_points); %funcion de suavizado para histograma
+         plot(xi,f)
+%        plot(xi,f.*max(counts.Values)/max(f),'LineWidth',1.5);
          line([0 0],ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
          line((duracion_stim(n)*[1 1])',ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
          hold off
@@ -85,19 +90,19 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         
         for i= 1:(ntrials(n)) %para todos los trials del estimulo
         spikenumtrial(i)=numel(spike_stim(n).trial{i}); %cuenta el número de spikes 
-        move_to_base_workspace=(spikenumtrial);
+        move_to_base_workspace(spikenumtrial);
         numspikes= sum(spikenumtrial(1:i)); %y los suma para tener #spikes/trial
         end
         move_to_base_workspace=(numspikes);
         
         colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Repeticiones','Profundidad', 'Canal', 'Umbral','Desvío','Spikes','Binsize histograma'};
         valuetable={ave, fecha, file, estimulo, ntrials(n), profundidad, desired_channel_neural, thr, std_min, numspikes, binsize};       
-        t = uitable(f2,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1220 40.5]);
+        uitable(f2,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1220 40.5]);
     
 end 
 return
 
-    function move_to_base_workspace(variable)
+function move_to_base_workspace(variable)
 
 % move_to_base_workspace(variable)
 %
@@ -107,4 +112,4 @@ return
 variable_name = inputname(1);
 assignin('base', variable_name, variable);
 
-return;
+return

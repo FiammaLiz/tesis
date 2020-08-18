@@ -8,7 +8,7 @@
 %% Selecciono canal y umbrales
 
 %Si extraje un grupo de canales
-desired_channel_neural= 19; %este es el canal que quiero
+desired_channel_neural= 12; %este es el canal que quiero
 channels_neural=find(chip_channels==desired_channel_neural); %para llamar al canal que quiero
 
 %Extract data from desired channel
@@ -18,7 +18,7 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 %desired_channel_neural= 19; %este es el canal que quiero
 %channel_neural_data=filtered_neural_data';
 
-thr_m= (-350:50:-100); %umbrales que quiero abarcar
+thr_m= (-350:50:-50); %umbrales que quiero abarcar
 binsize= 0.01;
 
 %% Detecto los spikes
@@ -74,7 +74,7 @@ for th = 1:length(thr_m) %para cada umbral
     hist_spike_thrm{th}= thrspike(n).stim(th); %junta los datos para hacer el histograma
     
      h(2+th)= subplot(3+length(thr_m),1,2+th);
-         histogram(cell2mat(hist_spike_thrm{1,th}.thr),'BinWidth',binsize,'Normalization','probability'); %hago histograma, convirtiendo mis datos en un solo vector para que histogram lo tome
+         histogram(cell2mat(hist_spike_thrm{1,th}.thr),'BinWidth',binsize,'Normalization','pdf'); %hago histograma, convirtiendo mis datos en un solo vector para que histogram lo tome
          hold on
          %ksdensity(hist_spike_thrm{1,th}.thr,'BandWidth',binsize,'NumPoints',100000, 'function', 'pdf');
          line([0 0],h(2+th).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo

@@ -22,7 +22,7 @@ spike_tot=length(spike_times); %Este es el número de spikes que encontró
 move_to_base_workspace(spike_tot);
 
 %Me avisa cuantos spikes encontró con ese umbral:
-fprintf('\n\n\nHAY %d EVENTOS QUE SUPERAN EL UMBRAL DE %d\n\n\n',spike_tot,-round(thr))
+fprintf('\n\n\nHAY %d EVENTOS QUE SUPERAN EL UMBRAL DE %d\n\n\n',spike_tot,round(thr))
 
 % Asigna inicios al tipo de trial
 

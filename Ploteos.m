@@ -20,8 +20,8 @@ cd (path_function);
 %estimulos y la senial de los cuatro canales del tetrodo con marcas de
 %inicio y fin de los estimulos.
 
-desired_channels_neural= 12:15;
-canales= '12 a 15';
+desired_channels_neural= 8:11;
+canales= '8 a 11';
 numch=length(desired_channels_neural);
 
 %Para poder llamar solo los 4 canales que quiero arriba
@@ -60,10 +60,10 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
   %thr= std_min*std_noise_detect; %calcula thr como x desvíos estandar de la mediana
   
   %Criterio 2: Asigno manualmente el umbral
-  thr=-300; 
+  thr=-250; 
   abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
   std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvío estandar de mediana de los datos
-  std_min=abs(thr/std_noise_detect); %Calculo cuántos desvíos estandard representa mi umbral escogido para posterior comparación
+  std_min=thr/std_noise_detect %Calculo cuántos desvíos estandard representa mi umbral escogido para posterior comparación
   
 spikedetection (thr,channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim,pausa);
 

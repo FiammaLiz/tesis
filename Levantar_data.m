@@ -146,15 +146,15 @@ num_stim_prev=table2array(estimulos(:,1))'; %vector con números asociados a tip
  [pks,lcs]=findpeaks(filtered_stimuli_data'); %encuentra máximos locales en canal testigo filtrado
    test=diff(pks); %calcula la diferencia entre picos adyacentes
    found=find(test>0.5)+1; %selecciono aquellos picos que tengan una diferencia mayor a 0.5 (se que me extrae solo el comienzo de la señal testigo)
-   found2=find(diff(found)>600)+1; %selecciono picos que estén distanciados por los menos 600 samples 
-   t0s=([lcs(found(1));lcs(found(found2))]/sample_rate)'; %instantes donde comenzó el estímulo en segundo
-   num_t0s = length(t0s);
+   meanCycle = mean(diff(found)); %calcula la media de la diferencia entre los picos, esto daría una idea del ancho del trial sin hardcodeo
+   found2=find(diff(found)>meanCycle/2)+1; %selecciono picos que estén distanciados por lo menos la mitad de un ancho promedio de trial
+   t0s=([lcs(found(found2(1)-1));lcs(found(found2))]/sample_rate)'; %instantes donde comenzó el estímulo en segundos. El primer instante va a ser found2(1)-1, porque found2 me calcula aquellos que tienen una diferencia de al menos la mitad del ciclo, por ende su t0 anterior lo cumple
+       
    num_stim= num_stim_prev(:,1:num_t0s); %corrección por si fue un protocolo cortado
    name_stim = name_stim_prev (:,1:num_t0s); %corrección por si fue un protocolo cortado
    clear num_stim_prev
- 
-   
 clear test
+clear meanCycle
 clear found
 clear found2
 clear pks
@@ -173,7 +173,7 @@ clear h
      disp('ERROR EN CANTIDAD DE T0s')
    end
    
-   if length(t0s)~=length(name_stim) %si hay menos
+   if length(t0s)<=length(name_stim) %si hay menos
       disp('NO HAY LA CANTIDAD DE ESTÍMULOS PLANIFICADA')
    end
    

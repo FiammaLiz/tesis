@@ -48,8 +48,8 @@ for ch=1:numch %para cada canal hago un subplot
     move_to_base_workspace(prom_spikes);
     plot (t_ss+(w_pre+w_post)*(ch-1), prom_spikes,'color','k','LineWidth',1.3); %ploteo la media superpuesta a los spikes
     desv_std= std(spikeshapes'); %calculo el desvio estandard de la media
-    plot(t_ss+(w_pre+w_post)*(ch-1),prom_spikes+desv_std,'k:','LineWidth',1.3); %grafico desvio estandard como linea punteada
-    plot(t_ss+(w_pre+w_post)*(ch-1),prom_spikes-desv_std,'k:','LineWidth',1.3); %grafico desvio estandard como linea punteada
+    plot(t_ss+(w_pre+w_post)*(ch-1),prom_spikes+desv_std,'k:','LineWidth',1.6); %grafico desvio estandard como linea punteada
+    plot(t_ss+(w_pre+w_post)*(ch-1),prom_spikes-desv_std,'k:','LineWidth',1.6); %grafico desvio estandard como linea punteada
     line((w_pre+w_post)*(ch-1)*[1 1],sss(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %separa los spikes de distintos canales con una linea
     %errorbar(t_ss+(w_pre+w_post)*(ch-1),mean(spikeshapes_ch(ch).ch,2),desv_std,'color',[0 0 0 0],'LineWidth',0.01); %ploteo barras de error
     xlabel 'tiempo/[s]';

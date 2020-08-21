@@ -71,7 +71,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
          hold on
 %        yyaxis left
          [f,xi]=ksdensity(hist_spikes,'BandWidth',binsize,'function','pdf','NumPoints',num_points); %funcion de suavizado para histograma
-         plot(xi,f)
+         plot(xi,f,'LineWidth',1,'Color','r')
 %        plot(xi,f.*max(counts.Values)/max(f),'LineWidth',1.5);
          line([0 0],ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
          line((duracion_stim(n)*[1 1])',ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo

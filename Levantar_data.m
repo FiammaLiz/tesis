@@ -53,6 +53,19 @@ clear fs_stim_BOS2
 %clear stim_file_CON
 %clear stim_file_REV
 
+%TextGrid
+%Ingresar aqui para armar el struct que lleva el dato de las silabas
+
+cd 'D:\Datos Canarios Protocolos\Scripts\mPraat-master'
+BOS_tg= 'BOS1_VioAzu-2019-03-07.TextGrid';
+%BOS2_tg= 'BOS2_VioAzu-2019-03-07.TextGrid';
+tg = tgRead([stim_path BOS_tg]);
+%tg2 = tgRead ([stim_path BOS2_tg]);
+
+%tg= [tg tg2];
+clear BOS_tg
+%clear BOS2_tg
+
 %% Cargo los datos que necesito
 
 path_function ='D:\Datos Canarios Protocolos\Scripts\';

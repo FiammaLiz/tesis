@@ -18,7 +18,12 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 %desired_channel_neural= 19; %este es el canal que quiero
 %channel_neural_data=filtered_neural_data';
 
+abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
+std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvío estandar de mediana de los datos
 thr_m= (-350:50:-50); %umbrales que quiero abarcar
+
+std_m= round(thr_m/std_noise_detect); %conversion a desvio
+
 binsize= 0.01;
 
 %% Detecto los spikes
@@ -41,7 +46,7 @@ for n=1:length(unique(num_stim)) %para cada estimulo
     h(1)=subplot(3+length(thr_m),1,1);
       %Espectograma del estímulo
         window_width=sample_rate/100;   %points
-        [~,f,t,p] = spectrogram(audio_stim{1},...
+        [~,f,t,p] = spectrogram(audio_stim{n},...
         gausswin(window_width,5),...
         ceil(0.75*window_width),...
         linspace(0,ceil(sample_rate/2),...
@@ -54,7 +59,7 @@ for n=1:length(unique(num_stim)) %para cada estimulo
         xlim([-L duracion_stim(1)+L]); %límite de ventana en x
         hold on
         line([0 0],h(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
-        line((t_audio_stim{1}(length(t_audio_stim{1}))*[1 1])',h(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
+        line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',h(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
         hold off
         ylabel ('Espectograma', 'FontSize', 10);
         title 'Barrido con distintos umbrales'
@@ -78,8 +83,9 @@ for th = 1:length(thr_m) %para cada umbral
          hold on
          %ksdensity(hist_spike_thrm{1,th}.thr,'BandWidth',binsize,'NumPoints',100000, 'function', 'pdf');
          line([0 0],h(2+th).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
-         line((duracion_stim(1)*[1 1])',h(2+th).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
-         xlim([-L duracion_stim(1)+L]); %Pongo de límite a la ventana seleccionada
+         line((duracion_stim(n)*[1 1])',h(2+th).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
+         xlim([-L duracion_stim(n)+L]); %Pongo de límite a la ventana seleccionada
+         text(h(2+th).XLim(1),h(2+th).YLim(2)*4/5,['Std=' num2str(std_m(th))],'FontSize',10,'Interpreter','none');
          ylabel(['Thr=' num2str(thr_m(th))], 'FontSize', 10); %Nombro el umbral usado en el eje y
 end 
         xlabel ('tiempo/[s]');

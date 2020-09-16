@@ -7,7 +7,7 @@ binsize, ave, fecha, file, profundidad)
 %Matlab 2017a
 %Fiamma Liz Leites
 
-%% ESTÍMULO, RASTER E HISTOGRAMA
+%% EST�?MULO, RASTER E HISTOGRAMA
 
  %Si hay más de un estímulo, saca una figura por cada estímulo
  
@@ -17,11 +17,22 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         
         ax(1)=subplot(5,1,1);
         %Audio del estimulo
-        plot(t_audio_stim{n}, audio_stim{n}); %grafico el audio
+        plot(t_audio_stim{n}, audio_stim{n},'Color','k'); %grafico el audio
         hold on
         line([0 0],ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
         line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
-        hold off
+        %Hace parches que van cambiando de color para cada i�laba, traza lineas
+        %divisorias para ayudar en gris
+        %for tx=1:length(textgrid.tmin)
+        %patch([textgrid.tmin(tx) textgrid.tmax(tx)],ax(1).YLim,[0.05*tx 0.05*tx 0.05*tx],'FaceAlpha',0.2,'EdgeColor','none'); 
+        %line(textgrid.tmin(tx),ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]);
+        %line(textgrid.tmax(tx),ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); 
+        %end
+        %Escribe los nombres de las s�labas centrados en el parche a 3/4 de altura
+        %for n=1:length(textgrid.tmin)
+        %text((textgrid.tmin(n)+textgrid.tmax(n))/2,(ax(1).YLim(2))*3/4,textgrid.tier{tier}.name(n),'FontSize',10,'Interpreter','none');
+        %end 
+        %hold off
         xlim([-L duracion_stim(n)+L]); %pongo de límite a la ventana seleccionada
         title 'Estimulo, Raster e Histograma';
         ylabel 'Estimulo'
@@ -37,7 +48,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
     
         ax(2)=subplot(5,1,2);
         imagesc('XData',t,'YData',f,'CData',10*log10(p(1:100,:)));
-        colormap(jet);
+        colormap(flipud(jet));
         ylim([0 10000]);
         xlim([-L duracion_stim(n)+L]); %límite de ventana en x
         hold on
@@ -49,7 +60,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         ax(3)=subplot(5,1,3);
         %Raster
         for i= 1:(ntrials(n)) %para todos los trials en el estimulo n
-            line((spike_stim(n).trial{1,i}'*[1 1])',[0 1] + i,'LineStyle','-','MarkerSize',4,'Color','r'); %extrae las instancias de disparo y hace lineas rojas, apilándolas por cada trial
+            line((spike_stim(n).trial{1,i}'*[1 1])',[0 1] + i,'LineStyle','-','MarkerSize',4,'Color','b'); %extrae las instancias de disparo y hace lineas rojas, apilándolas por cada trial
             hold on
             line([0 0],ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
             line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
@@ -93,9 +104,9 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         move_to_base_workspace(spikenumtrial);
         numspikes= sum(spikenumtrial(1:i)); %y los suma para tener #spikes/trial
         end
-        move_to_base_workspace=(numspikes);
+        move_to_base_workspace(numspikes);
         
-        colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Repeticiones','Profundidad', 'Canal', 'Umbral','Desvío','Spikes','Binsize histograma'};
+        colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Repeticiones','Profundidad', 'Canal', 'Umbral','Desvio','Spikes','Binsize histograma'};
         valuetable={ave, fecha, file, estimulo, ntrials(n), profundidad, desired_channel_neural, thr, std_min, numspikes, binsize};       
         uitable(f2,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1220 40.5]);
     

@@ -19,7 +19,7 @@ title 'Chequeo de detección de spikes'
 
 %Raw data con marquitas de spikes
 h(2)=subplot(3,1,2);
-plot(t_amplifier,channel_neural_data); %Canal neuronal
+plot(t_amplifier,channel_neural_data,'Color','k'); %Canal neuronal
 hold on
 %Agrego lineas con comienzos de trials (grises, verticales)
 line((t0s'*[1 1])',h(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.3 0.3 0 0.6]);   

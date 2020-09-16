@@ -20,7 +20,7 @@ num_fig=3+numch; %número de subplots de acuerdo a la cantidad de canales que in
 
 %Canal testigo
  h(1)= subplot(num_fig,1,1);
- plot(t_board_adc,filtered_stimuli_data); 
+ plot(t_board_adc,filtered_stimuli_data,'Color','k'); 
  ylabel ('Canal testigo','FontSize',9)
  line((t0s'*[1 1])',h(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.3 0.3 0 0.6]); 
  title 'Raw data: canal testigo, espectograma y canales neuronales';
@@ -28,7 +28,7 @@ num_fig=3+numch; %número de subplots de acuerdo a la cantidad de canales que in
 %Espectograma
  h(2)=subplot(num_fig,1,2);
  imagesc('XData',t,'YData',f,'CData',10*log10(p(1:100,:)));
-    colormap(jet);
+    colormap(flipud(jet));
     ylim([0 10000]);
     text(t0s,y,name_stim,'FontSize',10,'Interpreter','none'); %etiqueta qué estimulo es al principio del estímulo
     line((t0s'*[1 1])',h(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.3 0.3 0 0.6]); 
@@ -64,5 +64,5 @@ lim_ejey=[-500 500];
    
         colnames={'Ave', 'Fecha', 'Protocolo','Profundidad','Canales'};
         valuetable={ave, fecha, file, profundidad, canales};       
-        t = uitable(r1,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [330 30 560 40.5]);
+        uitable(r1,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [330 30 560 40.5]);
 end 

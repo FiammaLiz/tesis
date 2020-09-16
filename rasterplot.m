@@ -1,5 +1,5 @@
 function rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,... 
-ntrials, spike_stim, desired_channel_neural, thr,std_min,points_bins,... 
+ntrials, spike_stim, desired_channel_neural, thr,std_min,points_bins,tg,... 
 binsize, ave, fecha, file, profundidad)
 %Devuelve tantas figuras como tipos de estimulos haya: sonograma, audio, 
 %raster e histograma
@@ -23,16 +23,25 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
         %Hace parches que van cambiando de color para cada i�laba, traza lineas
         %divisorias para ayudar en gris
-        %for tx=1:length(textgrid.tmin)
-        %patch([textgrid.tmin(tx) textgrid.tmax(tx)],ax(1).YLim,[0.05*tx 0.05*tx 0.05*tx],'FaceAlpha',0.2,'EdgeColor','none'); 
-        %line(textgrid.tmin(tx),ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]);
-        %line(textgrid.tmax(tx),ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); 
-        %end
+        hold on
+        if n<=length(tg) %solo si est�n los datos del textgrid los levanta y hace parches + nombres
+        num_silb= length(tg(n).tier{1,1}.T2); %numero de silabas
+        for tx=1:num_silb
+            if (-1)^tx==1 %esto es solo para lograr que alterne colores, si tx es par hace una cosa y si es impar otra
+        patch([tg(n).tier{1,1}.T1(tx) tg(n).tier{1,1}.T1(tx) tg(n).tier{1,1}.T2(tx) tg(n).tier{1,1}.T2(tx)],[ax(1).YLim(1) ax(1).YLim(2) ax(1).YLim(2) ax(1).YLim(1)],[0.5+0.5/num_silb*tx 1/num_silb*tx 1-1/num_silb*tx],'FaceAlpha',0.27,'EdgeColor','none'); 
+            else
+        patch([tg(n).tier{1,1}.T1(tx) tg(n).tier{1,1}.T1(tx) tg(n).tier{1,1}.T2(tx) tg(n).tier{1,1}.T2(tx)],[ax(1).YLim(1) ax(1).YLim(2) ax(1).YLim(2) ax(1).YLim(1)],[1/num_silb*tx 0.5+0.5/num_silb*tx 1-1/num_silb*tx],'FaceAlpha',0.17,'EdgeColor','none'); 
+            end 
+        hold on
+        line(tg(n).tier{1,1}.T1(tx)*[1 1],ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]);
+        line(tg(n).tier{1,1}.T2(tx)*[1 1],ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); 
+        end
         %Escribe los nombres de las s�labas centrados en el parche a 3/4 de altura
-        %for n=1:length(textgrid.tmin)
-        %text((textgrid.tmin(n)+textgrid.tmax(n))/2,(ax(1).YLim(2))*3/4,textgrid.tier{tier}.name(n),'FontSize',10,'Interpreter','none');
-        %end 
-        %hold off
+        for k=1:num_silb
+        text((tg(n).tier{1,1}.T1(k)+tg(n).tier{1,1}.T2(k))/2,(ax(1).YLim(2))*3/4,tg(n).tier{1,1}.Label(k),'FontSize',10,'Interpreter','none');
+        end
+        end
+        hold off
         xlim([-L duracion_stim(n)+L]); %pongo de límite a la ventana seleccionada
         title 'Estimulo, Raster e Histograma';
         ylabel 'Estimulo'
@@ -54,6 +63,12 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         hold on
         line([0 0],ax(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
         line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
+        if n<=length(tg)
+        for tx=1:num_silb
+        line(tg(n).tier{1,1}.T1(tx)*[1 1],ax(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]);
+        line(tg(n).tier{1,1}.T2(tx)*[1 1],ax(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); 
+        end
+        end
         hold off
         ylabel 'Espectograma';
         

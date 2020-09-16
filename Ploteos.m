@@ -5,9 +5,10 @@
 
 %% Cargo el protocolo preprocesado y me voy al directorio de las funciones
 
-path_file= 'D:\Datos Canarios Protocolos\ca313-VioAzu_2018-2019\190308\';
+path_file= 'D:\Datos Canarios Protocolos\ca313-VioAzu_2018-2019\190310\';
 cd (path_file);
-protocolo='protocolo1_VioAzu_190308_134006'; 
+protocolo='protocolo2_VioAzu_190310_172854'; 
+%protocolo2_VioAzu_190310_172854
 %protocolo3_VioAzu_190307_120148
 %protocolo2_VioAzu_190307_114152
 %protocolo1_VioAzu_190307_113706
@@ -66,11 +67,12 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
   %thr= -std_min*std_noise_detect; %calcula thr como x desvíos estandar de la mediana
   
   %Criterio 2: Asigno manualmente el umbral
-  thr=-200; 
+  thr=-300; 
   abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
   std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvío estandar de mediana de los datos
-  std_min= thr/std_noise_detect %Calculo cuántos desvíos estandard representa mi umbral escogido para posterior comparación
-spikedetection (thr,channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim,pausa);
+  std_min= thr/std_noise_detect; %Calculo cuántos desvíos estandard representa mi umbral escogido para posterior comparación
+  disp(num2str(std_min));
+  spikedetection (thr,channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim,pausa);
 
 %% 3) Chequeo de la detección de spikes
 %Devuelve una figura con el canal neuronal seleccionado (raw data) donde marco umbral y eventos
@@ -88,7 +90,7 @@ binsize=0.010; %tamaño del bin del histograma, en segundos
 points_bins= 1000; %puntos por bin para suavizado
 
 rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,...  %datos del estímulo
-ntrials, spike_stim, desired_channel_neural,thr,std_min,points_bins,... 
+ntrials, spike_stim, desired_channel_neural,thr,std_min,points_bins,tg,... 
 binsize, ave, fecha, file, profundidad) %datos de la tabla
 
 %% Spike shape

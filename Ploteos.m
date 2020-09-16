@@ -5,14 +5,14 @@
 
 %% Cargo el protocolo preprocesado y me voy al directorio de las funciones
 
-path_file= '/home/alex/Documents/Fiamma/Datos_Canarios_Playback/ca313-VioAzu_2018-2019/190307/';
+path_file= 'D:\Datos Canarios Protocolos\ca313-VioAzu_2018-2019\190308\';
 cd (path_file);
-protocolo='protocolo3_VioAzu_190307_120148'; 
+protocolo='protocolo1_VioAzu_190308_134006'; 
 %protocolo3_VioAzu_190307_120148
 %protocolo2_VioAzu_190307_114152
 %protocolo1_VioAzu_190307_113706
 load(protocolo); %cargo datos del .mat
-path_function ='/home/alex/Documents/Fiamma/Scripts/Scripts_Fiamma';
+path_function ='D:\Datos Canarios Protocolos\Scripts\';
 cd (path_function);
 
 
@@ -66,7 +66,7 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
   %thr= -std_min*std_noise_detect; %calcula thr como x desvíos estandar de la mediana
   
   %Criterio 2: Asigno manualmente el umbral
-  thr=-250; 
+  thr=-200; 
   abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
   std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvío estandar de mediana de los datos
   std_min= thr/std_noise_detect %Calculo cuántos desvíos estandard representa mi umbral escogido para posterior comparación

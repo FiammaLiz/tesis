@@ -1,5 +1,5 @@
 function rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,... 
-ntrials, spike_stim, desired_channel_neural, thr,std_min,points_bins,tg,... 
+ntrials, spike_stim, desired_channel_neural, thr,std_min,points_bins,tg,colorp,... 
 binsize, ave, fecha, file, profundidad)
 %Devuelve tantas figuras como tipos de estimulos haya: sonograma, audio, 
 %raster e histograma
@@ -11,8 +11,8 @@ binsize, ave, fecha, file, profundidad)
 
  %Si hay más de un estímulo, saca una figura por cada estímulo
  
-for n=1:(length(unique(num_stim)))  %para cada estimulo
-    
+    for n=1:(length(unique(num_stim)))  %para cada estimulo
+
         f2=figure(n+1); %para que no se superponga si saca una figura con spike check
         
         ax(1)=subplot(5,1,1);
@@ -24,14 +24,11 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         %Hace parches que van cambiando de color para cada i�laba, traza lineas
         %divisorias para ayudar en gris
         hold on
+        
         if n<=length(tg) %solo si est�n los datos del textgrid los levanta y hace parches + nombres
-        num_silb= length(tg(n).tier{1,1}.T2); %numero de silabas
+        num_silb=length(tg(n).tier{1,1}.Label);
         for tx=1:num_silb
-            if (-1)^tx==1 %esto es solo para lograr que alterne colores, si tx es par hace una cosa y si es impar otra
-        patch([tg(n).tier{1,1}.T1(tx) tg(n).tier{1,1}.T1(tx) tg(n).tier{1,1}.T2(tx) tg(n).tier{1,1}.T2(tx)],[ax(1).YLim(1) ax(1).YLim(2) ax(1).YLim(2) ax(1).YLim(1)],[0.5+0.5/num_silb*tx 1/num_silb*tx 1-1/num_silb*tx],'FaceAlpha',0.27,'EdgeColor','none'); 
-            else
-        patch([tg(n).tier{1,1}.T1(tx) tg(n).tier{1,1}.T1(tx) tg(n).tier{1,1}.T2(tx) tg(n).tier{1,1}.T2(tx)],[ax(1).YLim(1) ax(1).YLim(2) ax(1).YLim(2) ax(1).YLim(1)],[1/num_silb*tx 0.5+0.5/num_silb*tx 1-1/num_silb*tx],'FaceAlpha',0.17,'EdgeColor','none'); 
-            end 
+        patch([tg(n).tier{1,1}.T1(tx) tg(n).tier{1,1}.T1(tx) tg(n).tier{1,1}.T2(tx) tg(n).tier{1,1}.T2(tx)],[ax(1).YLim(1) ax(1).YLim(2) ax(1).YLim(2) ax(1).YLim(1)],colorp{tx,1},'FaceAlpha',0.15,'EdgeColor','none');
         hold on
         line(tg(n).tier{1,1}.T1(tx)*[1 1],ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]);
         line(tg(n).tier{1,1}.T2(tx)*[1 1],ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); 
@@ -57,7 +54,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
     
         ax(2)=subplot(5,1,2);
         imagesc('XData',t,'YData',f,'CData',10*log10(p(1:100,:)));
-        colormap(flipud(jet));
+        colormap(jet);
         ylim([0 10000]);
         xlim([-L duracion_stim(n)+L]); %límite de ventana en x
         hold on
@@ -75,7 +72,9 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         ax(3)=subplot(5,1,3);
         %Raster
         for i= 1:(ntrials(n)) %para todos los trials en el estimulo n
-            line((spike_stim(n).trial{1,i}'*[1 1])',[0 1] + i,'LineStyle','-','MarkerSize',4,'Color','b'); %extrae las instancias de disparo y hace lineas rojas, apilándolas por cada trial
+            for g= 1: length(spike_stim(n).trial{1,i})
+            line(spike_stim(n).trial{1,i}(g)'*[1 1],[-0.5 0.5] + i,'LineStyle','-','MarkerSize',4,'Color','b'); %extrae las instancias de disparo y hace lineas rojas, apil�ndolas por cada trial
+            end
             hold on
             line([0 0],ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
             line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
@@ -125,7 +124,7 @@ for n=1:(length(unique(num_stim)))  %para cada estimulo
         valuetable={ave, fecha, file, estimulo, ntrials(n), profundidad, desired_channel_neural, thr, std_min, numspikes, binsize};       
         uitable(f2,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1220 40.5]);
     
-end 
+    end 
 return
 
 function move_to_base_workspace(variable)

@@ -29,7 +29,7 @@ num_fig=3+numch; %número de subplots de acuerdo a la cantidad de canales que in
 
 %Espectograma
  h(2)=subplot(num_fig,1,2);
- imagesc('XData',t,'YData',f,'CData',10*log10(p(1:100,:)));
+ imagesc('XData',(t+t0s(trial_i)-t0s(1)),'YData',f,'CData',10*log10(p(1:100,:)));
     colormap(jet);
     ylim([0 10000]);
     text(t0s(trial_i:trial_f),y(trial_i:trial_f),name_stim(trial_i:trial_f),'FontSize',10,'Interpreter','none'); %etiqueta qué estimulo es al principio del estímulo

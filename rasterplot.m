@@ -3,13 +3,12 @@ ntrials, spike_stim, desired_channel_neural, thr,std_min,points_bins,tg,colorp,.
 binsize, ave, fecha, file, profundidad)
 %Devuelve tantas figuras como tipos de estimulos haya: sonograma, audio, 
 %raster e histograma
-%Versión 30/07/2020
 %Matlab 2017a
 %Fiamma Liz Leites
 
-%% EST�?MULO, RASTER E HISTOGRAMA
+%% ESTIMULO, RASTER E HISTOGRAMA
 
- %Si hay más de un estímulo, saca una figura por cada estímulo
+ %Si hay mas de un estímulo, saca una figura por cada estimulo
  
     for n=1:(length(unique(num_stim)))  %para cada estimulo
 
@@ -19,9 +18,9 @@ binsize, ave, fecha, file, profundidad)
         %Audio del estimulo
         plot(t_audio_stim{n}, audio_stim{n},'Color','k'); %grafico el audio
         hold on
-        line([0 0],ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
-        line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
-        %Hace parches que van cambiando de color para cada i�laba, traza lineas
+        line([0 0],ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estimulo
+        line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %linea de fin de estimulo
+        %Hace parches que van cambiando de color para cada silaba, traza lineas
         %divisorias para ayudar en gris
         hold on
         
@@ -39,11 +38,11 @@ binsize, ave, fecha, file, profundidad)
         end
         end
         hold off
-        xlim([-L duracion_stim(n)+L]); %pongo de límite a la ventana seleccionada
+        xlim([-L duracion_stim(n)+L]); %pongo de limite a la ventana seleccionada
         title 'Estimulo, Raster e Histograma';
         ylabel 'Estimulo'
         
-        %Espectograma del estímulo
+        %Espectograma del estimulo
         window_width=sample_rate/100;   %points
         [~,f,t,p] = spectrogram(audio_stim{n},...
         gausswin(window_width,5),...
@@ -56,10 +55,10 @@ binsize, ave, fecha, file, profundidad)
         imagesc('XData',t,'YData',f,'CData',10*log10(p(1:100,:)));
         colormap(jet);
         ylim([0 10000]);
-        xlim([-L duracion_stim(n)+L]); %límite de ventana en x
+        xlim([-L duracion_stim(n)+L]); %limite de ventana en x
         hold on
-        line([0 0],ax(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
-        line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
+        line([0 0],ax(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estimulo
+        line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %linea de fin de estimulo
         if n<=length(tg)
         for tx=1:num_silb
         line(tg(n).tier{1,1}.T1(tx)*[1 1],ax(2).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]);
@@ -73,14 +72,14 @@ binsize, ave, fecha, file, profundidad)
         %Raster
         for i= 1:(ntrials(n)) %para todos los trials en el estimulo n
             for g= 1: length(spike_stim(n).trial{1,i})
-            line(spike_stim(n).trial{1,i}(g)'*[1 1],[-0.5 0.5] + i,'LineStyle','-','MarkerSize',4,'Color','b'); %extrae las instancias de disparo y hace lineas rojas, apil�ndolas por cada trial
+            line(spike_stim(n).trial{1,i}(g)'*[1 1],[-0.5 0.5] + i,'LineStyle','-','MarkerSize',4,'Color','b'); %extrae las instancias de disparo y hace lineas azules, apil�ndolas por cada trial
             end
             hold on
-            line([0 0],ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
-            line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
+            line([0 0],ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estimulo
+            line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %linea de fin de estimulo
             hold off
-            xlim([-L duracion_stim(n)+L]); %pongo de límite en x a la ventana seleccionada
-            ylim([0 ntrials(n)+2]) %pongo de límite en y dos filas más que el numero de trials porque arranca en 1
+            xlim([-L duracion_stim(n)+L]); %pongo de limite en x a la ventana seleccionada
+            ylim([0 ntrials(n)+2]) %pongo de limite en y dos filas mas que el numero de trials porque arranca en 1
             ylabel 'Raster';
         end 
     
@@ -88,7 +87,7 @@ binsize, ave, fecha, file, profundidad)
         
         %Histograma
         % num_points=pausa/binsize*1000 %otro modo de puntos para suavizado
-         hist_spikes=cell2mat(spike_stim(n).trial); %agrupo las instancias spikes del mismo estímulo en un solo vector para función histograma
+         hist_spikes=cell2mat(spike_stim(n).trial); %agrupo las instancias spikes del mismo estimulo en un solo vector para funcion histograma
          counts=histogram(hist_spikes,'BinWidth',binsize,'Normalization','pdf'); %hago histograma con tipo de normalizacion pdf
          num_points=counts.NumBins*points_bins;
          %counts=histogram(hist_spikes,'BinWidth',binsize,'Normalization','probability');
@@ -98,10 +97,10 @@ binsize, ave, fecha, file, profundidad)
          [f,xi]=ksdensity(hist_spikes,'BandWidth',binsize,'function','pdf','NumPoints',num_points); %funcion de suavizado para histograma
          plot(xi,f,'LineWidth',1,'Color','r')
 %        plot(xi,f.*max(counts.Values)/max(f),'LineWidth',1.5);
-         line([0 0],ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estímulo
-         line((duracion_stim(n)*[1 1])',ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %línea de fin de estímulo
+         line([0 0],ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estimulo
+         line((duracion_stim(n)*[1 1])',ax(4).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %linea de fin de estimulo
          hold off
-         xlim([-L duracion_stim(n)+L]); %Pongo de límite a la ventana seleccionada
+         xlim([-L duracion_stim(n)+L]); %Pongo de limite a la ventana seleccionada
         
         ylabel 'Histograma'
         xlabel 'tiempo/[s]';
@@ -114,7 +113,7 @@ binsize, ave, fecha, file, profundidad)
         move_to_base_workspace(estimulo);
         
         for i= 1:(ntrials(n)) %para todos los trials del estimulo
-        spikenumtrial(i)=numel(spike_stim(n).trial{i}); %cuenta el número de spikes 
+        spikenumtrial(i)=numel(spike_stim(n).trial{i}); %cuenta el numero de spikes 
         move_to_base_workspace(spikenumtrial);
         numspikes= sum(spikenumtrial(1:i)); %y los suma para tener #spikes/trial
         end

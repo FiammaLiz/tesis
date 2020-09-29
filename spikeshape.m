@@ -1,4 +1,4 @@
-function spikeshape(w_pre,w_post,desired_channels_neural,desired_channel_neural,canales,channel_neural_data,numch, spike_lcs_ss,sample_rate, num_stim, ave, fecha, file, name_stim, profundidad, thr, std_min)
+function spikeshape(y_lim,w_pre,w_post,desired_channels_neural,desired_channel_neural,canales,channel_neural_data,numch, spike_lcs_ss,sample_rate, num_stim, ave, fecha, file, name_stim, profundidad, thr, std_min)
  %Devuelve spike shapes de los canales seleccionados en diferentes
  %subplots, hace una figura por estimulo.
  %Version 06/08/2020
@@ -18,15 +18,16 @@ t_ss= (1:length(spikeshapes(:,1)))/sample_rate; %tiempo que duran los spikes par
 
     sss(1)=subplot(3,1,1);
 for ch=1:numch %para cada canal
+    ylim(y_lim);
     for m=1:length(spike_lcs_ss{k}) %ploteo cada spike apilandolos en un plot por canal 
     plot (t_ss+(w_pre+w_post)*(ch-1),spikeshapes_ch(ch).ch(:,m),'color',[0.4940 0.1840 0.5560 0.3]); %color violeta con cierta transparencia, cuando se apilan se oscurece las partes donde coinciden
     hold on
     end 
     line((w_pre+w_post)*(ch-1)*[1 1],sss(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %separa los spikes de distintos canales
     if desired_channels_neural(ch)==desired_channel_neural %escribe en rojo el numero de canal del cual levante los spikes y en negro el resto
-        text((w_pre+w_post)*(ch-1)+w_pre,500,{'Canal',num2str(desired_channel_neural)},'Color','red','FontSize',13);
+        text((w_pre+w_post)*(ch-1)+w_pre,y_lim(2)*3/4,{'Canal',num2str(desired_channel_neural)},'Color','red','FontSize',13);
     else
-        text((w_pre+w_post)*(ch-1)+w_pre,500,{'Canal',num2str(desired_channels_neural(ch))},'FontSize',13);
+        text((w_pre+w_post)*(ch-1)+w_pre,y_lim(2)*3/4,{'Canal',num2str(desired_channels_neural(ch))},'FontSize',13);
     end 
     ylabel 'Voltaje/[mV]';
         % pause %por si quiero ir viendo los spikes mientras apila
@@ -38,6 +39,7 @@ title 'Spike shapes de un tetrodo'
 
 for ch=1:numch %para cada canal hago un subplot
     sss(2)=subplot(3,1,2);
+    ylim(y_lim);
     for m=1:length(spike_lcs_ss{k}) %ploteo cada spike apilandolos en un plot por canal 
     plot (t_ss+(w_pre+w_post)*(ch-1),spikeshapes_ch(ch).ch(:,m)), %multicolor si uso desvío estandard 
     hold on

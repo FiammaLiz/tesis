@@ -1,6 +1,6 @@
 function ISIcalculator(n,x_lim, sample_rate, num_stim, name_stim, ave, fecha, file, profundidad, desired_channel_neural, binsize, spike_lcs_ss,thr,std_min)
 %%ISIcalculator
-%Hace histogramas con los interspike intervals para el estímulo elegido
+%Hace histogramas con los interspike intervals para el estimulo elegido
 
 isi= (diff(spike_lcs_ss{1,n})/sample_rate)*1000; %calculo las diferencias entre los tiempos de los spikes levantados y las dejo en milisegundos
 isifigure=figure(1);
@@ -8,12 +8,14 @@ estimulo=name_stim(num_stim==n); %nombre del estimulo
 estimulo=char(estimulo(1)); %para tenerlo una sola vez
 
 is(1)=subplot(2,1,1); %hago un subplot de su isi
-yyaxis left
-histogram(isi,'BinWidth', binsize, 'Normalization','pdf'); %hago histograma de los ISIS relativizado
-ylabel('Probabilidad');
 yyaxis right
 histogram(isi,'BinWidth', binsize,'FaceAlpha',0,'EdgeColor','none'); %segundo eje con valores absolutos
-ylabel('Número de spikes');
+ylabel('Numero de spikes');
+yyaxis left
+h= histogram(isi,'BinWidth', binsize, 'Normalization','pdf'); %hago histograma de los ISIS relativizado
+h.BinLimits=x_lim;
+h.NumBins=x_lim(2);
+ylabel('Probabilidad');
 hold on
 xlim(x_lim)
 xlabel 'tiempo/[ms]'

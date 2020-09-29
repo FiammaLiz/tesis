@@ -8,7 +8,7 @@
 %% Selecciono canal y umbrales
 
 %Si extraje un grupo de canales
-desired_channel_neural= 12; %este es el canal que quiero
+desired_channel_neural= 8; %este es el canal que quiero
 channels_neural=find(chip_channels==desired_channel_neural); %para llamar al canal que quiero
 
 %Extract data from desired channel
@@ -20,17 +20,18 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 
 abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
 std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvÃ­o estandar de mediana de los datos
-thr_m= (-350:50:-50); %umbrales que quiero abarcar
-
+thr_m=(-250:25:-50); %umbrales que quiero abarcar
+maximo= 300; %tamaño del shoulder de arriba
+minimo= -500; %tamaño del spike, para eliminar artefactos de técnica para spike shape
 std_m= round(thr_m/std_noise_detect); %conversion a desvio
 
-binsize= 0.01;
+binsize= 0.008;
 
 %% Detecto los spikes
 
 
 for i=1:length(thr_m) %para todos los umbrales
-    spikedetection (thr_m(i), channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim, pausa) %levanto los spikes
+    spikedetection (maximo,minimo,thr_m(i), channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim, pausa) %levanto los spikes
     for a=1:length(unique(num_stim))
         for k=1:ntrials(a)
     thrspike(a).stim(i).thr{k}=spike_stim(a).trial{1,k}; %los guardo en un struct por estimulo y umbral
@@ -87,6 +88,7 @@ for th = 1:length(thr_m) %para cada umbral
          xlim([-L duracion_stim(n)+L]); %Pongo de lÃ­mite a la ventana seleccionada
          text(h(2+th).XLim(1),h(2+th).YLim(2)*4/5,['Std=' num2str(std_m(th))],'FontSize',10,'Interpreter','none');
          ylabel(['Thr=' num2str(thr_m(th))], 'FontSize', 10); %Nombro el umbral usado en el eje y
+         %ylim([0 1])
 end 
         xlabel ('tiempo/[s]');
         %Tabla con datos
@@ -95,7 +97,7 @@ end
         
         colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Repeticiones','Profundidad', 'Canal', 'Binsize histograma'};
         valuetable={ave, fecha, file, estimulo, ntrials(n), profundidad, desired_channel_neural, binsize};       
-        t = uitable(f1,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [125 30 1100 40.5]);
+        t = uitable(f1,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [250 30 920 40.5]);
         
         equispace(f1)  
         linkaxes(h,'x');

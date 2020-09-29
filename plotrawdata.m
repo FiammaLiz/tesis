@@ -40,7 +40,7 @@ num_fig=3+numch; %número de subplots de acuerdo a la cantidad de canales que in
  %Canales de la señal neuronal
 
  for ch = 1:numch
-     h(2+ch)= subplot(num_fig,1,2+ch);
+     b(ch)= subplot(num_fig,1,2+ch);
      plot(t_amplifier(sample_i:sample_f),channel_neural_data(sample_i:sample_f,ch));
      ylim(lim_ejey);
      ylabel ({['Ch' num2str(desired_channels_neural(ch))],'Voltaje/[mV]'}, 'FontSize',9);
@@ -60,10 +60,10 @@ num_fig=3+numch; %número de subplots de acuerdo a la cantidad de canales que in
     hold off
  end
       xlabel 'tiempo/[s]';
-      
+   linkaxes([h b],'x'); 
+   linkaxes(b,'y');
    equispace(r1);
-   linkaxes(h(3:2+ch),'y');
-   linkaxes(h,'x');
+
    
         colnames={'Ave', 'Fecha', 'Protocolo','Profundidad','Canales'};
         valuetable={ave, fecha, file, profundidad, canales};       

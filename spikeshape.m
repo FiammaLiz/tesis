@@ -4,13 +4,14 @@ function spikeshape(y_lim,w_pre,w_post,desired_channels_neural,desired_channel_n
  %Version 06/08/2020
  %Matlab 2017a
 
+ 
 for k=1:length(unique(num_stim)) %para cada tipo de estimulo
         for ch=1:numch %y para cada canal
  for m=1:length(spike_lcs_ss{1,k}) %tomo cada instancia de spike
      hold on
-     spikeshapes(:,m)=channel_neural_data(spike_lcs_ss{1,k}(m)-w_pre*sample_rate : spike_lcs_ss{1,k}(m)+w_post*sample_rate,ch); %y tomo la ventana que yo le seteé
+     spikeshapes(:,m)=channel_neural_data(spike_lcs_ss{1,k}(m)-w_pre*sample_rate : spike_lcs_ss{1,k}(m)+w_post*sample_rate,ch); %#ok<AGROW> %y tomo la ventana que yo le seteé
  end
-     spikeshapes_ch(ch).ch=spikeshapes; %voy guardando cada uno de ese conjunto de spikes en un struct por canal
+     spikeshapes_ch(ch).ch=spikeshapes; %#ok<AGROW> %voy guardando cada uno de ese conjunto de spikes en un struct por canal
         end 
         
 ss=figure(k); %armo tantas figuras como tipos de estimulos tenga
@@ -47,9 +48,8 @@ for ch=1:numch %para cada canal hago un subplot
     end 
     %agrego promedio + desvio estandard
     prom_spikes=mean(spikeshapes_ch(ch).ch,2)';
-    move_to_base_workspace(prom_spikes);
     plot (t_ss+(w_pre+w_post)*(ch-1), prom_spikes,'color','k','LineWidth',1.3); %ploteo la media superpuesta a los spikes
-    desv_std= std(spikeshapes'); %calculo el desvio estandard de la media
+    desv_std= std(spikeshapes'); %#ok<UDIM> %calculo el desvio estandard de la media
     plot(t_ss+(w_pre+w_post)*(ch-1),prom_spikes+desv_std,'k:','LineWidth',1.6); %grafico desvio estandard como linea punteada
     plot(t_ss+(w_pre+w_post)*(ch-1),prom_spikes-desv_std,'k:','LineWidth',1.6); %grafico desvio estandard como linea punteada
     line((w_pre+w_post)*(ch-1)*[1 1],sss(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %separa los spikes de distintos canales con una linea
@@ -63,28 +63,11 @@ end
     
 %Tabla de datos
  estimulo=name_stim(num_stim==k); %nombre del estimulo
-        estimulo=char(estimulo(1)); %para tenerlo una sola vez
-        move_to_base_workspace(estimulo);
-        
-        numspikes_stim(k)=numel(spike_lcs_ss{k}); %cuenta el número de spikes por estimulo 
-        move_to_base_workspace(numspikes_stim);
+        estimulo=char(estimulo(1)); %para tenerlo una sola vez  
+        numspikes_stim(k)=numel(spike_lcs_ss{k}); %#ok<AGROW> %cuenta el número de spikes por estimulo 
       
 colnames={'Ave', 'Fecha', 'Protocolo', 'Estimulo','Profundidad', 'Canales', 'Umbral','Desvio', 'Spikes'};
 valuetable={ave, fecha, file, estimulo, profundidad, canales, thr,std_min, numspikes_stim(k)};       
 uitable(ss,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [110 30 1100 40.5]);
 
 end 
-
-return
-
- function move_to_base_workspace(variable)
-
-% move_to_base_workspace(variable)
-%
-% Move variable from function workspace to base MATLAB workspace so
-% user will have access to it after the program ends.
-
-variable_name = inputname(1);
-assignin('base', variable_name, variable);
-
- return;

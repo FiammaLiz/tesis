@@ -12,9 +12,7 @@ for k=1:length(unique(num_stim)) %para cada tipo de estimulo
  end
      spikeshapes_ch(ch).ch=spikeshapes; %voy guardando cada uno de ese conjunto de spikes en un struct por canal
         end 
-
-move_to_base_workspace(spikeshapes_ch);
-
+        
 ss=figure(k); %armo tantas figuras como tipos de estimulos tenga
 t_ss= (1:length(spikeshapes(:,1)))/sample_rate; %tiempo que duran los spikes para poder plotear
 
@@ -52,7 +50,6 @@ for ch=1:numch %para cada canal hago un subplot
     move_to_base_workspace(prom_spikes);
     plot (t_ss+(w_pre+w_post)*(ch-1), prom_spikes,'color','k','LineWidth',1.3); %ploteo la media superpuesta a los spikes
     desv_std= std(spikeshapes'); %calculo el desvio estandard de la media
-    move_to_base_workspace(desv_std);
     plot(t_ss+(w_pre+w_post)*(ch-1),prom_spikes+desv_std,'k:','LineWidth',1.6); %grafico desvio estandard como linea punteada
     plot(t_ss+(w_pre+w_post)*(ch-1),prom_spikes-desv_std,'k:','LineWidth',1.6); %grafico desvio estandard como linea punteada
     line((w_pre+w_post)*(ch-1)*[1 1],sss(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %separa los spikes de distintos canales con una linea

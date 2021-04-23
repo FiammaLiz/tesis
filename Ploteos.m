@@ -23,12 +23,15 @@ clear path_function
 %inicio y fin de los estimulos.
 
 %Tetrodos (para la olvidadiza :D):
-%desired_channels_neural=8:11;
-%desired_channels_neural=12:15;
-%desired_channels_neural= 16:19;
-desired_channels_neural= 20:23;
-canales= '20 a 23'; %Ojo no olvidarse de esto que sino aparece mal en la tabla
+%desired_channels_neural=8:11; canales= '8 a 11';
+%desired_channels_neural=12:15; canales= '12 a 15';
+%desired_channels_neural= 16:19; canales= '16 a 19';
+desired_channels_neural= 20:23; canales= '20 a 23';
+
 numch=length(desired_channels_neural);
+trial_i=1;
+trial_f=20;
+lim_ejey=[-400 400];
 
 %Para poder llamar solo los 4 canales que quiero arriba
 channels_neural=zeros(1,numch);
@@ -40,18 +43,18 @@ clear ch
 %Extract data from desired channel
 channel_neural_data=filtered_neural_data(:,channels_neural);
 %Plotear raw data
-plotrawdata (ave, fecha, file, profundidad,canales,... %datos del protocolo
-numch, t_amplifier, t_board_adc,... %tiempos
-channel_neural_data,filtered_audio_data, filtered_stimuli_data,... %datos filtrados
-t0s, name_stim, y, sample_rate, desired_channels_neural) %datos de la tabla
+plotrawdata (lim_ejey, ave, fecha, file, profundidad, canales, numch,t_amplifier, t_board_adc,trial_i,trial_f,channel_neural_data, filtered_audio_data, filtered_stimuli_data, t0s, name_stim, y, sample_rate, desired_channels_neural)
 clear canales
+clear trial_i
+clear trial_f
+clear lim_ejey
 
 %% 2) Deteccion de spikes
 %Filtra por el umbral seleccionado la raw data y luego los guarda en un
 %struct segun el tipo de estimulo y trial al que pertenezcan
 
 %Si extraje un grupo de canales
-desired_channel_neural= 22; %este es el canal que quiero
+desired_channel_neural= 21; %este es el canal que quiero
 channels_neural=(chip_channels==desired_channel_neural); %para llamar al canal que quiero
 
 %Extract data from desired channel
@@ -100,16 +103,16 @@ clear trial_f
 binsize=0.008; %tamanio del bin del histograma, en segundos
 points_bins= 1000; %puntos por bin para suavizado
 
-%rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,... 
-%ntrials, spike_stim, desired_channel_neural, thr,std_min,points_bins,tg,colorp,... 
-%binsize, ave, fecha, file, profundidad)
+rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,... 
+ntrials, spike_stim, desired_channel_neural, thr,std_min,points_bins,tg,colorp,... 
+binsize, ave, fecha, file, profundidad)
 
 %Si esta muy ruidoso el raster por mucha densidad de spikes, solo plotear
 %histograma
 
-histplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,...  %datos del estimulo
-ntrials, spike_stim, desired_channel_neural,thr,std_min,points_bins,tg,colorp,... 
-binsize, ave, fecha, file, profundidad) %datos de la tabla
+%histplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,...  %datos del estimulo
+%ntrials, spike_stim, desired_channel_neural,thr,std_min,points_bins,tg,colorp,... 
+%binsize, ave, fecha, file, profundidad) %datos de la tabla
 
 clear binsize
 clear points_bins

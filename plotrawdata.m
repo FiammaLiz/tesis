@@ -1,4 +1,4 @@
-function plotrawdata (lim_ejey, ave, fecha, file, profundidad, canales, numch,t_amplifier, t_board_adc,trial_i,trial_f,pausa,channel_neural_data, filtered_audio_data, filtered_stimuli_data, t0s, name_stim, y, sample_rate, desired_channels_neural)
+function plotrawdata (lim_ejey, ave, fecha, file, profundidad, canales, numch,t_amplifier, t_board_adc,trial_i,trial_f,channel_neural_data, filtered_audio_data, filtered_stimuli_data, t0s, name_stim, y, sample_rate, desired_channels_neural)
 %Grafica los datos levantados con Levantar_data
 %Devuelve graficados la senial testigo, el espectograma estiquetado con los
 %estimulos y la senial de los cuatro canales del tetrodo con marcas de

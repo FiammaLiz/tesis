@@ -1,11 +1,11 @@
-%Para levantar raw data, Version 14/07/2020
+%Para levantar raw data, Version 23/04/2021
 % Fiamma Liz Leites
 %Modificado por Ceci Herbert 10/07/2020
 %Guarda un "archivo.mat" con datos levantados y pre-procesados
 
 
 %% Defino cosas
-clear all
+clear
 close all
 
 % cd 'C:\Users\Ceci\Desktop\' %con esto navegas hasta la ubicacion del arcivo
@@ -87,8 +87,10 @@ clear notes
 clear desired_sound_channel
 clear desired_witness_channel
 clear board_adc_data
+t_audio_stim=zeros(1,length(audio_stim));
+
 for n=1:(length(audio_stim))
-t_audio_stim(n)={[1:(length(audio_stim{n}))]/sample_rate};
+t_audio_stim(n)={1:(length(audio_stim{n}))/sample_rate};
 end
 clear n
 
@@ -96,6 +98,7 @@ clear n
 %Para hallar el canal deseado en amplifier_channels
 chip_channels=[amplifier_channels.chip_channel];
 
+channels_neural= zeros(1,numch);
 for ch = 1:numch
     channels_neural(ch)=find(chip_channels==desired_channels_neural(ch));
 end

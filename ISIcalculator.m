@@ -29,4 +29,4 @@ numspikes=length(isi);
  valuetable={ave, fecha, file, profundidad, estimulo, desired_channel_neural, thr, std_min, numspikes, binsize};       
  uitable(isifigure,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1200 40.5]);
         
-end 
+end

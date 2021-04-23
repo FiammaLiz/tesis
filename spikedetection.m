@@ -63,20 +63,14 @@ end
 %todo en un struct de celdas si es mas de un estimulo, sino lo hace
 %para uno solo en una variable
 
-found_trial=cell(ntrials(1),1);
-tstim=cell(ntrials(1),1);
-lcstim=cell(ntrials(1),1);
-spike_stim=struct('trial',cell(1,length(unique(num_stim))));
-spike_lcs_ss=cell(1);
-
- for m=1:(length(unique(num_stim)))  %para cada tipo de estimulo
+ for m=1:(length(unique(num_stim)))  %para cada tipo de estímulo
     for l=1:ntrials(m) %y para todos los trials adentro
-    found_trial{l,1}= (spike_times(spike_times<=(s(m).t0s(l)+(duracion_stim(m)+L))))> (s(m).t0s(l)-L); %selecciono spikes entre estimulo dentro de mi ventana, retorna valores booleanos
+    found_trial{l,1}= (spike_times(spike_times<=(s(m).t0s(l)+(duracion_stim(m)+L))))> (s(m).t0s(l)-L); %#ok<*AGROW> %selecciono spikes entre estímulo dentro de mi ventana, retorna valores booleanos
     tstim{l,1} = spike_times(found_trial{l,1})-s(m).t0s(l);%paso a tiempo y lo relativizo a su t0 para alinear, me da tiempo en segundos donde dispara cada spike alineados
     lcstim{l,1}=spike_lcs(found_trial{l,1})'; %indice de spikes encontrados
     end
-    spike_stim(m).trial= tstim{1:ntrials(m),1}; %voy guardando las celdas en el struct (instancia de spikes en segundos alineados)
+    spike_stim(m).trial= {tstim{1:ntrials(m),1}}; %voy guardando las celdas en el struct (instancia de spikes en segundos alineados)
     spike_lcs_ss{m}=cell2mat(lcstim)'; %agrupo en celdas todos los indices de spikes por estimulo (para spike shape)
- end
+ end 
 end 
   

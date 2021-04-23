@@ -7,8 +7,8 @@
 
 %% Selecciono canal y umbrales
 
-%Si extraje un grupo de canales
-desired_channel_neural= 8; %este es el canal que quiero
+%Si extraje un grupo de anales
+desired_channel_neural=21; %este es el canal que quiero
 channels_neural=find(chip_channels==desired_channel_neural); %para llamar al canal que quiero
 
 %Extract data from desired channel
@@ -20,10 +20,10 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 
 abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
 std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvÃ­o estandar de mediana de los datos
-thr_m=(-250:25:-50); %umbrales que quiero abarcar
-maximo= 300; %tamaño del shoulder de arriba
-minimo= -500; %tamaño del spike, para eliminar artefactos de técnica para spike shape
-std_m= round(thr_m/std_noise_detect); %conversion a desvio
+thr_m=(-200:10:-100); %umbrales que quiero abarcar
+maximo= 400; %tamaño del shoulder de arriba
+minimo= -800; %tamaño del spike, para eliminar artefactos de técnica para spike shape
+std_m= round(thr_m/std_noise_detect,2); %conversion a desvio
 
 binsize= 0.008;
 
@@ -36,7 +36,7 @@ for i=1:length(thr_m) %para todos los umbrales
         for k=1:ntrials(a)
     thrspike(a).stim(i).thr{k}=spike_stim(a).trial{1,k}; %los guardo en un struct por estimulo y umbral
         end 
-        end
+    end
 end 
 
 %% Ploteo
@@ -57,7 +57,7 @@ for n=1:length(unique(num_stim)) %para cada estimulo
         imagesc('XData',t,'YData',f,'CData',10*log10(p(1:100,:)));
         colormap(jet);
         ylim([0 10000]);
-        xlim([-L duracion_stim(1)+L]); %lÃ­mite de ventana en x
+        xlim([-L duracion_stim(n)+L]); %lÃ­mite de ventana en x
         hold on
         line([0 0],h(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estÃ­mulo
         line((t_audio_stim{n}(length(t_audio_stim{n}))*[1 1])',h(1).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5 0.6]); %lÃ­nea de fin de estÃ­mulo

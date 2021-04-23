@@ -5,65 +5,71 @@
 
 
 %% Defino cosas
-clear all
+clear
 close all
 
-% cd 'C:\Users\Ceci\Desktop\' %con esto navegas hasta la ubicacion del arcivo
-path = 'D:\Datos Canarios Protocolos\ca313-VioAzu_2018-2019\190308\';
+% cd 'C:\Users\Ceci\Desktop\' %con esto navegas hasta la ubicacion del arcHivo
+path = 'D:\Datos Canarios Protocolos\ca219-VeNe_2018-2019\181031\';
 % path = 'G:\Datos_Canarios_2018-2019\ca313-VioAzu\190308\';
-file = 'protocolo1_VioAzu_190308_134006';
-fecha='8.3.2019';
-path_estimulos= [path fecha '-1/'];
+file = 'protocolo4_181031_150223';
+fecha='31.10.2018';
+path_estimulos= [path fecha '-4\'];
 file_estimulos= 'estimulos.txt';
 
-ave='VioAzu';
+ave='VeNe';
 desired_channels_neural=8:23; %Cual es el canal neuronal que quiero
 desired_sound_channel= 2; %Canal del sonido
 desired_witness_channel= 1; %Canal de la senial testigo
 numch=length(desired_channels_neural); %cuantos canales son
-pausa=30; %pausa en segundos que aparece en el log
-profundidad= 180;
+pausa=28; %pausa en segundos que aparece en el log
+profundidad=237;
 
 %Cargo archivos de audio
-stim_path='D:\Datos Canarios Protocolos\ca313-VioAzu_2018-2019\Estimulos\';
+stim_path='D:\Datos Canarios Protocolos\ca219-VeNe_2018-2019\Estimulos\Protocolos\New_181029\';
 
-[stim_file_BOS,fs_stim_BOS]=audioread([stim_path 'BOS1_VioAzu_2019-03-07_07_34_17_cut_12s.wav']);
+[stim_file_BOS,fs_stim_BOS]=audioread([stim_path 'BOS_ca219-VeNe_2018-10-21_08_17_06.wav']);
 stim_file_BOS=resample(stim_file_BOS,30000,fs_stim_BOS);
 
-[stim_file_CON,fs_stim_CON]=audioread([stim_path 'CON_RoNe_2018-10-30_09_26_21_zeros_30000_cut.wav']);
-stim_file_CON=resample(stim_file_CON,30000,fs_stim_CON);
-
-%[stim_file_CON,fs_stim_CON]=audioread([stim_path 'CON_ca219-VeNe_2018-10-21_08_17_06_zeros.wav']);
+%[stim_file_CON,fs_stim_CON]=audioread([stim_path 'Rona_BOS_30k_CON.wav']);
 %stim_file_CON=resample(stim_file_CON,30000,fs_stim_CON);
 
-%[stim_file_REV,fs_stim_REV]=audioread([stim_path 'REV1_VioAzu_2019-03-07_07_34_17_cut_12s.wav']);
+%[stim_file_REV,fs_stim_REV]=audioread([stim_path 'ca219-VeNe_2018-10-21_08_17_06_REV.wav']);
 %stim_file_REV=resample(stim_file_REV,30000,fs_stim_REV);
 
-%[stim_file_REV2,fs_stim_REV2]=audioread([stim_path 'REV2_VioAzu_2019-03-07_07_33_58_cut_9s.wav']);
-%stim_file_REV2=resample(stim_file_REV2,30000,fs_stim_REV2);
+[stim_file_CON2,fs_stim_CON2]=audioread([stim_path 'CON2_RoNe_2018-10-30_09_26_21.wav']);
+stim_file_CON2=resample(stim_file_CON2,30000,fs_stim_CON2);
 
-%[stim_file_BOS2,fs_stim_BOS2]=audioread([stim_path 'BOS2_VioAzu_2019-03-07_07_33_58_cut_9s.wav']);
+[stim_file_REV2,fs_stim_REV2]=audioread([stim_path 'REV2_ca219-VeNe_2018-10-30_09_21_18.wav']);
+stim_file_REV2=resample(stim_file_REV2,30000,fs_stim_REV2);
+
+[stim_file_BOS2,fs_stim_BOS2]=audioread([stim_path 'BOS2_ca219-VeNe_2018-10-30_09_21_18.wav']);
 %stim_file_BOS2=resample(stim_file_BOS2,30000,fs_stim_BOS2);
 
-audio_stim={stim_file_BOS',stim_file_CON'};
+audio_stim={stim_file_BOS2', stim_file_BOS', stim_file_CON2',stim_file_REV2'};
 clear stim_file_BOS
 clear fs_stim_BOS
-%clear fs_stim_REV
-clear fs_stim_CON
-clear stim_file_CON
+clear stim_file_BOS2
+clear fs_stim_BOS2
+%clear fs_stim_CON
+%clear stim_file_CON
+clear fs_stim_CON2
+clear stim_file_CON2
 %clear stim_file_REV
-
+%clear fs_stim_REV
+clear stim_file_REV2
+clear fs_stim_REV2
 %TextGrid
 %Ingresar aqui para armar el struct que lleva el dato de las silabas
 
 cd 'D:\Datos Canarios Protocolos\Scripts\mPraat-master'
-%BOS_tg= 'BOS1_VioAzu-2019-03-07.TextGrid';
-BOS2_tg= 'BOS2_VioAzu-2019-03-07.TextGrid';
-tg = tgRead([stim_path BOS2_tg]);
-%tg2 = tgRead ([stim_path BOS2_tg]);
-%tg= [tg tg2];
+BOS_tg= 'BOS_ca219-VeNe_2018-10-21_08_17_06_zeros.TextGrid';
+BOS2_tg= 'BOS2_ca219-VeNe_2018-10-30_09_21_18.TextGrid';
+tg = [];
+tg2= tgRead([stim_path BOS2_tg]);
+tg2 = tgRead ([stim_path BOS2_tg]);
+tg= [tg2 tg];
+clear BOS_tg
 clear BOS2_tg
-%clear BOS2_tg
 
 colorp= {[1 1 0]; [1 0 1]; [0 1 1]; [1 0 0]; [0 1 0]; [0 0 1]; [0.5 0.5 0.5]; [0.7 0.7 0]; [0.7 0 0.7];...
 [0 0.7 0.7]; [0.7 0 0]; [0 0.7 0]; [0 0 0.7]; [0.3 0.3 0]; [0.3 0 0.3]; [0 0.3 0.3]; [0.3 0 0]; [0 0.3 0]; [0 0 0.3];...
@@ -154,7 +160,7 @@ clear witness_channel
 %Para encontrar inicios y finales de estimulos
 
  estimulos=readtable([path_estimulos,file_estimulos],... %Importa a matlab los datos de estimulos en un tabla
- 'Delimiter','\t','ReadVariableNames',false);   %tomando como separacion espacio en blanco
+'Delimiter','\t','ReadVariableNames',false);   %tomando como separacion espacio en blanco
 name_stim_prev=table2array(estimulos(:,2))'; %Pasa datos de la tabla a una matriz
 num_stim_prev=table2array(estimulos(:,1))'; %vector con numeros asociados a tipo de trial
 ntrials=length(name_stim_prev)/length(unique(name_stim_prev)); %calcula el numero de trials dividiendo 
@@ -163,12 +169,12 @@ ntrials=length(name_stim_prev)/length(unique(name_stim_prev)); %calcula el numer
  
  [pks,lcs]=findpeaks(filtered_stimuli_data'); %encuentra maximos locales en canal testigo filtrado
    test=diff(pks); %calcula la diferencia entre picos adyacentes
-   found=find(test>0.5)+1; %selecciono aquellos picos que tengan una diferencia mayor a 0.5 (se que me extrae solo el comienzo de la senial testigo)
+   found=find(test>0.25)+1; %selecciono aquellos picos que tengan una diferencia mayor a 0.5 (se que me extrae solo el comienzo de la senial testigo)
    if length(found)>length(num_stim_prev) %me avisa si llega a haber algun trial fallido
         disp('REVISAR QUE HAY ALGÚN INICIO FALLIDO')
    end
    meanCycle = mean(diff(found)); %calcula la media de la diferencia entre los picos, esto darÃ­a una idea del ancho del trial sin hardcodeo
-   found2=find(diff(found)>meanCycle/2)+1; %selecciono picos que estan distanciados por lo menos la mitad de un ancho promedio de trial
+   found2=find(diff(found)>2*meanCycle/3)+1; %selecciono picos que estan distanciados por lo menos la mitad de un ancho promedio de trial
    t0s=([lcs(found(found2(1)-1));lcs(found(found2))]/sample_rate)'; %instantes donde comenzo el estimulo en segundos. El primer instante va a ser found2(1)-1, porque found2 me calcula aquellos que tienen una diferencia de al menos la mitad del ciclo, por ende su t0 anterior lo cumple
    
    num_t0s=length(t0s);
@@ -210,5 +216,5 @@ clear num_t0s
 
 %% Guardo en un .mat
 
-cd (path)
-save ([file '.mat'],'-v7.3')
+%cd (path)
+%save ([file '.mat'],'-v7.3')

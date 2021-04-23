@@ -10,13 +10,14 @@ function spikedetection (maximo, minimo, thr, channel_neural_data, sample_rate, 
   %es positivo o negativo
 
 
- 
  if thr < 0 %si el umbral es negativo
-    [~,spike_lcs1]=findpeaks(-channel_neural_data','MinPeakHeight',-thr); %Encuentra los minimos
-    spike_lcs2=find(channel_neural_data<maximo & channel_neural_data>minimo)';
-    spike_lcs=intersect(spike_lcs1,spike_lcs2);
+     [neural_peaks,spike_lcs1]=findpeaks(-channel_neural_data','MinPeakProminence',-thr*3/4,'MinPeakHeight',-thr); %Encuentra los minimos
+    spike_lcs2=find(neural_peaks<maximo & neural_peaks>minimo)';
+    spike_lcs=spike_lcs1(spike_lcs2);
  else
-    [~,spike_lcs]=findpeaks(channel_neural_data','MinPeakHeight',thr); %Si es positivo, los maximos
+     [neural_peaks,spike_lcs1]=findpeaks(channel_neural_data','MinPeakProminence',thr*3/4,'MinPeakHeight',thr); %Encuentra los máximos si es positivo
+     spike_lcs2=find(neural_peaks<maximo & neural_peaks>minimo)';
+     spike_lcs=spike_lcs1(spike_lcs2);
  end 
 move_to_base_workspace(spike_lcs);
 spike_times = spike_lcs/sample_rate; %Lo paso a tiempo en segundos, porque spike_lcs es en samples

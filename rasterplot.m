@@ -40,7 +40,7 @@ binsize, ave, fecha, file, profundidad)
         hold off
         xlim([-L duracion_stim(n)+L]); %pongo de limite a la ventana seleccionada
         title 'Estimulo, Raster e Histograma';
-        ylabel 'Estimulo'
+        ylabel 'Sonido(u.a)'
         
         %Espectograma del estimulo
         window_width=sample_rate/100;   %points
@@ -66,13 +66,13 @@ binsize, ave, fecha, file, profundidad)
         end
         end
         hold off
-        ylabel 'Espectograma';
+        ylabel 'Frecuencia (Hz)';
         
         ax(3)=subplot(5,1,3);
         %Raster
         for i= 1:(ntrials(n)) %para todos los trials en el estimulo n
             for g= 1: length(spike_stim(n).trial{1,i})
-            line(spike_stim(n).trial{1,i}(g)'*[1 1],[-0.5 0.5] + i,'LineStyle','-','MarkerSize',4,'Color','b'); %extrae las instancias de disparo y hace lineas azules, apilándolas por cada trial
+            line(spike_stim(n).trial{1,i}(g)'*[1 1],[-0.5 0.5] + i,'LineStyle','-','MarkerSize',4,'Color','b'); %extrae las instancias de disparo y hace lineas azules, apilándolas por cada trial 
             end
             hold on
             line([0 0],ax(3).YLim,'LineStyle','-','MarkerSize',4,'Color',[0.5 0.5 0.5]); %linea de principio de estimulo
@@ -80,7 +80,7 @@ binsize, ave, fecha, file, profundidad)
             hold off
             xlim([-L duracion_stim(n)+L]); %pongo de limite en x a la ventana seleccionada
             ylim([0 ntrials(n)+2]) %pongo de limite en y dos filas mas que el numero de trials porque arranca en 1
-            ylabel 'Raster';
+            ylabel '# de repetición'
         end 
     
         ax(4)=subplot(5,1,4);
@@ -88,11 +88,16 @@ binsize, ave, fecha, file, profundidad)
         %Histograma
         % num_points=pausa/binsize*1000 %otro modo de puntos para suavizado
          hist_spikes=cell2mat(spike_stim(n).trial); %agrupo las instancias spikes del mismo estimulo en un solo vector para funcion histograma
-         counts=histogram(hist_spikes,'BinWidth',binsize,'Normalization','pdf'); %hago histograma con tipo de normalizacion pdf
+         yyaxis left
+         histogram(hist_spikes,'BinWidth', binsize,'FaceAlpha',0,'EdgeColor','none'); %segundo eje con valores absolutos
+         ylabel ('PSTH(disparos/s)')       
+         hold on
+         yyaxis right
+         counts=histogram(hist_spikes,'BinWidth', binsize, 'Normalization','pdf'); %hago histograma relativizado
+         ylabel 'Probabilidad de disparo'
          num_points=counts.NumBins*points_bins;
          %counts=histogram(hist_spikes,'BinWidth',binsize,'Normalization','probability');
          %hago histograma % otra normalizacion
-         hold on
 %        yyaxis left
          [f,xi]=ksdensity(hist_spikes,'BandWidth',binsize,'function','pdf','NumPoints',num_points); %funcion de suavizado para histograma
          plot(xi,f,'LineWidth',1,'Color','r')
@@ -102,8 +107,8 @@ binsize, ave, fecha, file, profundidad)
          hold off
          xlim([-L duracion_stim(n)+L]); %Pongo de limite a la ventana seleccionada
         
-        ylabel 'Histograma'
-        xlabel 'tiempo/[s]';
+        
+        xlabel 'Tiempo(s)';
         equispace(f2)  
         linkaxes(ax,'x');
 
@@ -123,7 +128,8 @@ binsize, ave, fecha, file, profundidad)
         valuetable={ave, fecha, file, estimulo, ntrials(n), profundidad, desired_channel_neural, thr, std_min, numspikes, binsize};       
         uitable(f2,'Data', valuetable, 'RowName', [], 'ColumnName', colnames,'Position', [50 30 1220 40.5]);
     
-    end 
+    end
+     
 return
 
 function move_to_base_workspace(variable)

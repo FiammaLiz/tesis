@@ -3,7 +3,7 @@
 %canal
 %Fiamma Liz Leites
 %Script para Matlab 2017a
-%Version 07/08/2020
+%Version 23/04/2021
 
 %% Selecciono canal y umbrales
 
@@ -20,7 +20,7 @@ channel_neural_data=filtered_neural_data(:,channels_neural);
 
 abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
 std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvÃ­o estandar de mediana de los datos
-thr_m=(-250:25:-50); %umbrales que quiero abarcar
+thr_m=(-100:10:-50); %umbrales que quiero abarcar
 maximo= 300; %tamaño del shoulder de arriba
 minimo= -500; %tamaño del spike, para eliminar artefactos de técnica para spike shape
 std_m= round(thr_m/std_noise_detect); %conversion a desvio
@@ -28,15 +28,14 @@ std_m= round(thr_m/std_noise_detect); %conversion a desvio
 binsize= 0.008;
 
 %% Detecto los spikes
-
-
+thrspike=struct('stim', cell(1,length(unique(num_stim))));
 for i=1:length(thr_m) %para todos los umbrales
     spikedetection (maximo,minimo,thr_m(i), channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim, pausa) %levanto los spikes
     for a=1:length(unique(num_stim))
         for k=1:ntrials(a)
     thrspike(a).stim(i).thr{k}=spike_stim(a).trial{1,k}; %los guardo en un struct por estimulo y umbral
         end 
-        end
+    end
 end 
 
 %% Ploteo
@@ -75,7 +74,7 @@ for n=1:length(unique(num_stim)) %para cada estimulo
         xlim([-L duracion_stim(n)+L]); %pongo de lÃ­mite a la ventana seleccionada
         ylabel ('Estimulo', 'FontSize', 10);
         
-
+    hist_spike_thrm=cell(1,length(thr_m));
 for th = 1:length(thr_m) %para cada umbral
     hist_spike_thrm{th}= thrspike(n).stim(th); %junta los datos para hacer el histograma
     

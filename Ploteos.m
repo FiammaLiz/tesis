@@ -5,9 +5,9 @@
 
 %% Cargo el protocolo preprocesado y me voy al directorio de las funciones
 
-path_file= 'D:\Datos Canarios Protocolos\ca313-VioAzu_2018-2019\190310\';
+path_file= 'D:\Datos Canarios Protocolos\ca188-RoNe_2018-2019\181220\';
 cd (path_file);
-protocolo='protocolo2_VioAzu_190310_172854'; 
+protocolo='mergeprotocolo35'; 
 %protocolo2_VioAzu_190310_172854
 %protocolo3_VioAzu_190307_120148
 %protocolo2_VioAzu_190307_114152
@@ -66,13 +66,13 @@ clear channels_neural
   %thr= -std_min*std_noise_detect; %calcula thr como x desvios estandar de la mediana
   
   %Criterio 2: Asigno manualmente el umbral
-  thr=-60; 
+  thr=-50; 
   maximo= 400; %tamaño del shoulder de arriba
   minimo= -1000; %tamaño del spike, para eliminar artefactos de twcnica para spike shape
   abs_neural_data= abs(channel_neural_data); %Valor absoluto de los datos
   std_noise_detect=median(abs_neural_data)/0.6745; %Calcula desvio estandar de mediana de los datos
   std_min= thr/std_noise_detect; %Calculo cuántos desvios estandard representa mi umbral escogido para posterior comparacion
-  spikedetection (maximo, minimo, thr,channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim,pausa);
+  [spike_lcs, spike_times, spike_tot, s, ntrials, duracion_stim, L, spike_stim, spike_lcs_ss]=spikedetection (maximo, minimo, thr,channel_neural_data, sample_rate, num_stim, t0s, t_audio_stim,pausa);
   disp(['std=' num2str(std_min)]);
   clear std_noise_detect
   clear abs_neural_data
@@ -97,19 +97,19 @@ clear trial_f
 %Devuelve tantas figuras como tipos de estimulos haya: sonograma, audio, 
 %raster e histograma. 
 
-binsize=0.010; %tamanio del bin del histograma, en segundos
+binsize=0.008; %tamanio del bin del histograma, en segundos
 points_bins= 1000; %puntos por bin para suavizado
 
-rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,...  %datos del estimulo
-ntrials, spike_stim, desired_channel_neural,thr,std_min,points_bins,tg,... 
-binsize, ave, fecha, file, profundidad) %datos de la tabla
+%rasterplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,... 
+%ntrials, spike_stim, desired_channel_neural, thr,std_min,points_bins,tg,colorp,... 
+%binsize, ave, fecha, file, profundidad)
 
 %Si esta muy ruidoso el raster por mucha densidad de spikes, solo plotear
 %histograma
 
-%histplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,...  %datos del estimulo
-%ntrials, spike_stim, desired_channel_neural,thr,std_min,points_bins,tg,colorp,... 
-%binsize, ave, fecha, file, profundidad) %datos de la tabla
+histplot (num_stim, name_stim, t_audio_stim, audio_stim, L, duracion_stim, sample_rate,...  %datos del estimulo
+ntrials, spike_stim, desired_channel_neural,thr,std_min,points_bins,tg,colorp,... 
+binsize, ave, fecha, file, profundidad) %datos de la tabla
 
 clear binsize
 clear points_bins
@@ -136,8 +136,8 @@ clear points_bins
 y_lim=[-400 300];
 %desired_channels_neural= 8:11; canales= '8 a 11';
 %desired_channels_neural= 12:15; canales= '12 a 15';
-desired_channels_neural= 16:19; canales= '16 a 19';
-%desired_channels_neural= 20:23; canales= '20 a 23';
+%desired_channels_neural= 16:19; canales= '16 a 19';
+desired_channels_neural= 20:23; canales= '20 a 23';
 w_pre=0.001; %ventana anterior del pico del spike
 w_post=0.0015; %ventana posterior del pico del spike
 numch=length(desired_channels_neural);
@@ -146,7 +146,7 @@ numch=length(desired_channels_neural);
 channels_neural= zeros(1,numch);
 
 for ch = 1:numch
-    channels_neural(ch)=(chip_channels==desired_channels_neural(ch));
+    channels_neural(ch)=find(chip_channels==desired_channels_neural(ch));
 end
 clear numch
 
@@ -165,7 +165,7 @@ clear w_post
 clear y_lim
 
 %% Test con menos spikes
-subset_spikes=mat2cell(spike_lcs_ss{1}(1:2000),1);
+subset_spikes=mat2cell(spike_lcs_ss{1}(1:200),1);
 % spike_lcs_ss{1}(5000:6000) tiene los artefactos
 spikeshape(y_lim,w_pre,w_post,desired_channels_neural,desired_channel_neural,canales,channel_neural_data,...
     numch, subset_spikes,sample_rate, num_stim, ave, fecha, file, name_stim, profundidad, thr, std_min)
